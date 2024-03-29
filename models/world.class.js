@@ -32,6 +32,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        this.level.enemies.world = this;
     }
 
     draw() {
@@ -71,15 +72,35 @@ class World {
      */
     addToMap(obj) {
         if (obj.otherDirection) {
-            this.ctx.save();
-            this.ctx.translate(obj.width, 0);
-            this.ctx.scale(-1, 1);
-            obj.x = obj.x * -1;
+            this.flipImage(obj);
         }
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
+        this.drawColisionOutlines(obj);
+
         if (obj.otherDirection) {
-            obj.x = obj.x * -1;
-            this.ctx.restore();
+            this.flipImageBack(obj);
+        }
+    }
+
+    flipImage(obj) {
+        this.ctx.save();
+        this.ctx.translate(obj.width, 0);
+        this.ctx.scale(-1, 1);
+        obj.x = obj.x * -1;
+    }
+
+    flipImageBack(obj) {
+        obj.x = obj.x * -1;
+        this.ctx.restore();
+    }
+
+    drawColisionOutlines(obj) {
+        if (obj instanceof Character || obj instanceof Chicken) {
+            this.ctx.beginPath();
+            this.ctx.lineWidth = '5';
+            this.ctx.strokeStyle = 'blue';
+            this.ctx.rect(obj.x, obj.y, obj.width, obj.height);
+            this.ctx.stroke();
         }
     }
 }
