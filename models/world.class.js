@@ -1,15 +1,13 @@
 class World {
-    maxBackgroundLength = 10;
+    // maxBackgroundLength = 10;
     character = new Character();
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundPaths = level1.backgroundPaths;
-
+    level = level1;
     backgroundObj = [];
     ctx;
     canvas;
     keyboard;
     camera_x = 0;
+    max_x = this.level.maxBackground_x;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -23,8 +21,8 @@ class World {
     generateBackground() {
         let x_offset = 0;
         let path = '';
-        for (let index = 0; index < this.maxBackgroundLength; index++) {
-            this.backgroundPaths.forEach((backgroundPath) => {
+        for (let index = 0; index < this.level.maxBackgroundNr; index++) {
+            this.level.backgroundPaths.forEach((backgroundPath) => {
                 path = backgroundPath;
                 this.backgroundObj.push(new BackgroundObject(path, CANVAS_WIDTH, x_offset));
             });
@@ -43,11 +41,11 @@ class World {
 
         this.addObjectsToMap(this.backgroundObj);
 
-        this.addObjectsToMap(this.clouds);
+        this.addObjectsToMap(this.level.clouds);
 
         this.addToMap(this.character);
 
-        this.addObjectsToMap(this.enemies);
+        this.addObjectsToMap(this.level.enemies);
 
         this.ctx.translate(-this.camera_x, 0);
 

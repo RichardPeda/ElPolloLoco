@@ -2,8 +2,7 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
-const CANVAS_HEIGHT = 480;
-const CANVAS_WIDTH = 720;
+
 
 function init() {
    
