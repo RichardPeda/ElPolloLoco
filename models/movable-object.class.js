@@ -18,10 +18,17 @@ class MovableObject extends DrawableObject {
 
     isColliding(obj) {
         return (
-            this.x + this.width >= obj.x && this.x <= obj.x + obj.width && this.y + this.height >= obj.y && this.y <= obj.y + obj.height // && obj.onCollisionCourse
+            // this.x + this.width >= obj.x &&
+            // this.x <= obj.x + obj.width &&
+            // this.y - this.offsetY + this.height >= obj.y &&
+            // this.y + this.offsetY <= obj.y + obj.height 
+
+            this.x + this.offsetX + this.width - this.offsetWidth >= obj.x &&
+            this.x <= obj.x + obj.offsetX + obj.width - obj.offsetWidth &&
+            this.y + this.offsetY + this.height - this.offsetHeight  >= obj.y &&
+            this.y + this.offsetY <= obj.y + obj.offsetY + obj.height - obj.offsetHeight 
         );
     }
-    
 
     isHit() {
         if (this.energy > 0) {
@@ -41,12 +48,6 @@ class MovableObject extends DrawableObject {
         }
     }
 
-    playAnimation(images) {
-        let i = this.currentImage % images.length;
-        let path = images[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
-    }
     moveRight() {
         this.x += this.movementSpeed;
     }

@@ -48,11 +48,18 @@ class Character extends MovableObject {
     world;
     movementSpeed = 6;
     audio = new Audio('audio/walking.mp3');
+    collectedCoins = 0;
+    collectedBottles = 0;
 
     constructor() {
         super().loadImage(this.IMAGES_IDLE[0]);
         this.height = 200;
         this.width = 100;
+        this.offsetY= 70;
+        this.offsetX= 10;
+        this.offsetWidth= 30;
+        this.offsetHeight= 80;
+
         // this.animationSpeed= 500
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_IDLE);
@@ -62,6 +69,16 @@ class Character extends MovableObject {
         // this.isHurt = true;
         this.applyGravity();
         this.animate();
+    }
+
+    collectCoin(amount) {
+        return (this.collectedCoins += amount);
+    }
+    collectBottle() {
+        return  this.collectedBottles += 1;
+    }
+    throwBottle(){
+        return  this.collectedBottles -= 1;
     }
 
     animate() {

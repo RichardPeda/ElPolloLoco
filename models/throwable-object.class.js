@@ -14,6 +14,7 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
     ];
+    
 
     constructor(obj) {
         super().loadImage(this.IMAGES_ROTATE[0]);
@@ -36,7 +37,7 @@ class ThrowableObject extends MovableObject {
 
     animate() {
         setInterval(() => {
-            this.animateSplash()
+            this.animateRotate()
         }, 1000 / 10);
     }
 

@@ -4,7 +4,6 @@ class World {
     healthStatusbar = new StatusBarHealth();
     coinStatusbar = new StatusbarCoin();
     bottleStatusbar = new StatusbarBottle();
-    // bottles = [new ThrowableObject(this.character.x, this.character.y)];
     bottles = [];
     level = level1;
     backgroundObj = [];
@@ -14,12 +13,17 @@ class World {
     camera_x = 0;
     max_x = this.level.maxBackground_x;
     throwableIndex = 0;
+    levelCoinAmount = 0;
+    levelBottleAmount = 0;
+    bottleIsThrown = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.generateBackground();
+        this.setLevelCoinAmount();
+        this.setLevelBottleAmount();
         this.run();
         this.draw();
         this.setWorld();
@@ -40,12 +44,21 @@ class World {
         }
     }
 
+    setLevelCoinAmount() {
+        this.levelCoinAmount = 100 / this.level.coins.length;
+    }
+    setLevelBottleAmount() {
+        this.levelBottleAmount = 100 / this.level.bottles.length;
+    }
+
     run() {
         setInterval(() => {
             this.checkCharacterCollisions();
             this.checkThrowableCollisions();
+            this.checkCoinCollisions();
+            this.checkBottleCollisions();
             this.checkThrowObject();
-        }, 200);
+        }, 100);
     }
 
     checkCharacterCollisions() {
@@ -58,13 +71,28 @@ class World {
         });
     }
 
+    checkCoinCollisions() {
+        this.level.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
+                this.level.coins.splice(index, 1);
+            }
+        });
+    }
+
+    checkBottleCollisions() {
+        this.level.bottles.forEach((bottle, index) => {
+            if (this.character.isColliding(bottle)) {
+                this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
+                this.level.bottles.splice(index, 1);
+            }
+        });
+    }
+
     checkThrowableCollisions() {
-        // this.character.getsHurt = false;
-        console.log(this.bottles.length);
         if (this.bottles.length > 0) {
             this.level.enemies.forEach((enemy) => {
                 if (this.bottles[this.bottles.length - 1].isColliding(enemy)) {
-                    console.log('bottle');
                 }
             });
         }
@@ -72,9 +100,17 @@ class World {
 
     checkThrowObject() {
         if (this.keyboard.THROW) {
-            // let bottle = new ThrowableObject(this.character.x + this.character.width / 2, this.character.y + this.character.height / 2, this.character.otherDirection);
-            let bottle = new ThrowableObject(this.character);
-            this.bottles.push(bottle);
+            if (!this.bottleIsThrown && this.character.collectedBottles > 0) {
+                let bottle = new ThrowableObject(this.character);
+                this.bottles.push(bottle);
+                this.bottleStatusbar.setPercentage(this.character.throwBottle() * this.levelBottleAmount);
+
+                this.bottleIsThrown = true;
+                setTimeout(() => {
+                    //avoid that throwing is fired to much
+                    this.bottleIsThrown = false;
+                }, 500);
+            }
         }
     }
 
@@ -104,6 +140,8 @@ class World {
         this.ctx.translate(this.camera_x, 0);
 
         this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
 
         this.ctx.translate(-this.camera_x, 0);
 
@@ -152,11 +190,12 @@ class World {
     }
 
     drawCollisionOutlines(obj) {
-        if (obj instanceof Character || obj instanceof Chicken || obj instanceof Endboss || obj instanceof ThrowableObject) {
+        if (obj instanceof Character || obj instanceof Chicken || obj instanceof Endboss || obj instanceof ThrowableObject|| obj instanceof CollectableBottle|| obj instanceof Coin) {
             this.ctx.beginPath();
             this.ctx.lineWidth = '5';
             this.ctx.strokeStyle = 'blue';
-            this.ctx.rect(obj.x, obj.y, obj.width, obj.height);
+            // this.ctx.rect(obj.x + obj.offsetX, obj.y + obj.offsetY, obj.width - obj.offsetX, obj.height - obj.offsetY);
+            this.ctx.rect(obj.x + obj.offsetX, obj.y + obj.offsetY, obj.width - obj.offsetWidth, obj.height - obj.offsetHeight);
             this.ctx.stroke();
         }
     }

@@ -11,5 +11,13 @@ const level1 = new Level(
         'img/5_background/layers/1_first_layer/1.png',
         'img/5_background/layers/1_first_layer/2.png',
     ],
-    4
+    4,
+    [new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin(), new Coin()],
+    [
+        new CollectableBottle(),
+        new CollectableBottle(),
+        new CollectableBottle(),
+        new CollectableBottle(),
+        new CollectableBottle()
+    ]
 );
