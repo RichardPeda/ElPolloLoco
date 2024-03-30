@@ -23,6 +23,9 @@ document.addEventListener('keydown', (e) => {
     if (e.key == ' ') {
         keyboard.SPACE = true;
     }
+    if (e.key == 'f') {
+        keyboard.THROW = true;
+    }
 });
 
 document.addEventListener('keyup', () => {
@@ -30,4 +33,5 @@ document.addEventListener('keyup', () => {
     keyboard.RIGHT = false;
     keyboard.UP = false;
     keyboard.SPACE = false;
+    keyboard.THROW = false;
 });

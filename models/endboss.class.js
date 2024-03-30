@@ -1,5 +1,5 @@
 class Endboss extends MovableObject {
-    y = 550;
+    y = 150;
     multi = 0.25;
     world;
 
@@ -18,7 +18,7 @@ class Endboss extends MovableObject {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.height = 300;
         this.width = 300;
-        this.x = 300;
+        this.x = 550;
         this.animationSpeed = 200
         this.loadImages(this.IMAGES_ALERT);
         this.animate()

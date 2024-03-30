@@ -1,16 +1,11 @@
-class MovableObject {
-    x = 0;
-    y = 100;
-    img;
-    width = 100;
-    height = 150;
-    imageCache = {};
-    currentImage = 0;
+class MovableObject extends DrawableObject {
     animationSpeed = 100;
     movementSpeed = 0.2;
-    otherDirection = false;
     speedY = 0;
     acceleration = 2.5;
+    energy = 100;
+    getsHurt = false;
+    // dies = false;
 
     applyGravity() {
         setInterval(() => {
@@ -21,21 +16,29 @@ class MovableObject {
         }, 1000 / 25);
     }
 
+    isColliding(obj) {
+        return (
+            this.x + this.width >= obj.x && this.x <= obj.x + obj.width && this.y + this.height >= obj.y && this.y <= obj.y + obj.height // && obj.onCollisionCourse
+        );
+    }
+    
+
+    isHit() {
+        if (this.energy > 0) {
+            this.energy -= 5;
+        }
+        return this.energy;
+    }
+    isDead() {
+        return this.energy <= 0;
+    }
+
     isAboveGround() {
-        return this.y < 225;
-    }
-
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
-
-    loadImages(imagePaths) {
-        imagePaths.forEach((imagePath) => {
-            let img = new Image();
-            img.src = imagePath;
-            this.imageCache[imagePath] = img;
-        });
+        if (this instanceof ThrowableObject) {
+            return true;
+        } else {
+            return this.y < 225;
+        }
     }
 
     playAnimation(images) {
@@ -53,6 +56,6 @@ class MovableObject {
     }
 
     jump() {
-        this.speedY = 20;
+        this.speedY = 30;
     }
 }
