@@ -11,6 +11,10 @@ class CollectableBottle extends DrawableObject{
         this.width = 80;
         this.x = 200 + Math.random() * 1500;
         this.y = 350;
+        this.offsetX = 30;
+        this.offsetY = 10;
+        this.offsetWidth = 40;
+        this.offsetHeight = 15;
         // this.animate()
     }
 

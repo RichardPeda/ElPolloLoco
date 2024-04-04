@@ -5,7 +5,8 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     getsHurt = false;
-    // dies = false;
+    isImmune = false;
+    animationID;
 
     applyGravity() {
         setInterval(() => {
@@ -21,18 +22,18 @@ class MovableObject extends DrawableObject {
             // this.x + this.width >= obj.x &&
             // this.x <= obj.x + obj.width &&
             // this.y - this.offsetY + this.height >= obj.y &&
-            // this.y + this.offsetY <= obj.y + obj.height 
+            // this.y + this.offsetY <= obj.y + obj.height
 
             this.x + this.offsetX + this.width - this.offsetWidth >= obj.x &&
             this.x <= obj.x + obj.offsetX + obj.width - obj.offsetWidth &&
-            this.y + this.offsetY + this.height - this.offsetHeight  >= obj.y &&
-            this.y + this.offsetY <= obj.y + obj.offsetY + obj.height - obj.offsetHeight 
+            this.y + this.offsetY + this.height - this.offsetHeight >= obj.y &&
+            this.y + this.offsetY <= obj.y + obj.offsetY + obj.height - obj.offsetHeight
         );
     }
 
     isHit() {
         if (this.energy > 0) {
-            this.energy -= 5;
+            this.energy -= 20;
         }
         return this.energy;
     }
@@ -48,6 +49,15 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    isNowImmune() {
+        this.isImmune = true;
+        setTimeout(() => {
+            this.isImmune = false;
+        }, 1000);
+
+        return this.isImmune;
+    }
+
     moveRight() {
         this.x += this.movementSpeed;
     }
@@ -55,8 +65,14 @@ class MovableObject extends DrawableObject {
     moveLeft() {
         this.x -= this.movementSpeed;
     }
+    stop() {
+        this.movementSpeed = 0;
+    }
 
     jump() {
         this.speedY = 30;
+    }
+    bounce() {
+        this.speedY = 15;
     }
 }

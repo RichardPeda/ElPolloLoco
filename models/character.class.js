@@ -1,7 +1,7 @@
 class Character extends MovableObject {
     x = 100;
     y = 225;
-    animationID;
+
     // y = 125;
     IMAGES_WALK = [
         'img/2_character_pepe/2_walk/W-21.png',
@@ -55,11 +55,11 @@ class Character extends MovableObject {
         super().loadImage(this.IMAGES_IDLE[0]);
         this.height = 200;
         this.width = 100;
-        this.offsetY= 70;
-        this.offsetX= 10;
-        this.offsetWidth= 30;
-        this.offsetHeight= 80;
-
+        this.offsetY = 70;
+        this.offsetX = 10;
+        this.offsetWidth = 30;
+        this.offsetHeight = 80;
+        this.energy = 1000;
         // this.animationSpeed= 500
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_IDLE);
@@ -75,10 +75,10 @@ class Character extends MovableObject {
         return (this.collectedCoins += amount);
     }
     collectBottle() {
-        return  this.collectedBottles += 1;
+        return (this.collectedBottles += 1);
     }
-    throwBottle(){
-        return  this.collectedBottles -= 1;
+    throwBottle() {
+        return (this.collectedBottles -= 1);
     }
 
     animate() {

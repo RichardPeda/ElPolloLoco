@@ -58,20 +58,30 @@ class World {
             this.checkCoinCollisions();
             this.checkBottleCollisions();
             this.checkThrowObject();
-        }, 100);
+        }, 20);
     }
 
     checkCharacterCollisions() {
+        //Character collision hurts character
         this.character.getsHurt = false;
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
-                this.healthStatusbar.setPercentage(this.character.isHit());
-                this.character.getsHurt = true;
+                if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isImmune) {
+                    enemy.isHit();
+                    enemy.isNowImmune();
+                    console.log(enemy.energy);
+                    this.character.bounce();
+                } else if (!enemy.isDead()) {
+                    this.healthStatusbar.setPercentage(this.character.isHit());
+
+                    this.character.getsHurt = true;
+                }
             }
         });
     }
 
     checkCoinCollisions() {
+        //collect coins
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
@@ -81,6 +91,7 @@ class World {
     }
 
     checkBottleCollisions() {
+        //collect bottles
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
@@ -92,7 +103,12 @@ class World {
     checkThrowableCollisions() {
         if (this.bottles.length > 0) {
             this.level.enemies.forEach((enemy) => {
-                if (this.bottles[this.bottles.length - 1].isColliding(enemy)) {
+                enemy.getsHurt = enemy.isImmune;
+                if (this.bottles[this.bottles.length - 1].isColliding(enemy) && !enemy.isDead() && !enemy.isImmune) {
+                    enemy.isHit();
+                    enemy.getsHurt = enemy.isNowImmune();
+
+                    console.log(enemy.energy);
                 }
             });
         }
@@ -190,7 +206,14 @@ class World {
     }
 
     drawCollisionOutlines(obj) {
-        if (obj instanceof Character || obj instanceof Chicken || obj instanceof Endboss || obj instanceof ThrowableObject|| obj instanceof CollectableBottle|| obj instanceof Coin) {
+        if (
+            obj instanceof Character ||
+            obj instanceof Chicken ||
+            obj instanceof Endboss ||
+            obj instanceof ThrowableObject ||
+            obj instanceof CollectableBottle ||
+            obj instanceof Coin
+        ) {
             this.ctx.beginPath();
             this.ctx.lineWidth = '5';
             this.ctx.strokeStyle = 'blue';
