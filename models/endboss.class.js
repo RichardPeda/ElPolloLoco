@@ -78,11 +78,8 @@ class Endboss extends MovableObject {
 
         setStoppableInterval(() => {
             if (this.step == 0 && this.world.charMeetsEndboss) {
-                if (this.counter == 0 || this.counter == 1) {
-                    this.moveLeft();
-                } else {
-                    this.moveRight();
-                }
+                if (this.counter == 0 || this.counter == 1) this.moveLeft();
+                else this.moveRight();
             }
         }, 1000 / 60);
 
