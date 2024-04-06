@@ -25,11 +25,6 @@ class MovableObject extends DrawableObject {
 
     isColliding(obj) {
         return (
-            // this.x + this.width >= obj.x &&
-            // this.x <= obj.x + obj.width &&
-            // this.y - this.offsetY + this.height >= obj.y &&
-            // this.y + this.offsetY <= obj.y + obj.height
-
             this.x + this.offsetX + this.width - this.offsetWidth >= obj.x &&
             this.x <= obj.x + obj.offsetX + obj.width - obj.offsetWidth &&
             this.y + this.offsetY + this.height - this.offsetHeight >= obj.y &&
@@ -58,8 +53,10 @@ class MovableObject extends DrawableObject {
     isAboveGround() {
         if (this instanceof ThrowableObject) {
             return true;
-        } else {
+        } else if (this instanceof Character) {
             return this.y < 225;
+        } else if (this instanceof JumpingChicken) {
+            return this.y < 350;
         }
     }
 

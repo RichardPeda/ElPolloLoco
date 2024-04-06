@@ -2,6 +2,8 @@ class Endboss extends MovableObject {
     y = 150;
     multi = 0.25;
     world;
+    step = 0;
+    counter = 0;
 
     IMAGES_WALK = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -48,10 +50,9 @@ class Endboss extends MovableObject {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.height = 300;
         this.width = 300;
-        this.x = 2000;
-        console.log(this.world)
+        // this.x = 2000;
         // this.x = 500;
-
+        this.movementSpeed = 2;
         this.offsetY = 50;
         this.offsetX = 10;
         this.offsetWidth = 30;
@@ -68,19 +69,59 @@ class Endboss extends MovableObject {
     }
 
     animate() {
+        setStoppableInterval(() => {
+            if (this.world.charMeetsEndboss) {
+                this.animationSequence();
+                this.moveSequence();
+            }
+        }, 2000);
+
+        setStoppableInterval(() => {
+            if (this.step == 0 && this.world.charMeetsEndboss) {
+                if (this.counter == 0 || this.counter == 1) {
+                    this.moveLeft();
+                } else {
+                    this.moveRight();
+                }
+            }
+        }, 1000 / 60);
+
         this.animationID = setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
                 this.stop();
                 setTimeout(() => {
-                    clearInterval(this.animationID)
-                    this.loadImage(this.IMAGES_DEAD[2])
+                    clearInterval(this.animationID);
+                    this.loadImage(this.IMAGES_DEAD[2]);
                 }, 1500);
-            } else if(this.getsHurt){
+            } else if (this.getsHurt) {
                 this.playAnimation(this.IMAGES_HURT);
-            }else{
+            } else if (this.step == 0) {
+                this.playAnimation(this.IMAGES_WALK);
+            } else if (this.step == 1) {
                 this.playAnimation(this.IMAGES_ALERT);
+            } else if (this.step == 2) {
+                this.playAnimation(this.IMAGES_ATTACK);
             }
         }, this.animationSpeed);
+    }
+
+    moveLeft() {
+        super.moveLeft();
+        this.otherDirection = false;
+    }
+    moveRight() {
+        super.moveRight();
+        this.otherDirection = true;
+    }
+
+    animationSequence() {
+        if (this.step < 2) this.step++;
+        else this.step = 0;
+    }
+
+    moveSequence() {
+        if (this.step == 0) this.counter++;
+        if (this.counter == 4) this.counter = 0;
     }
 }
