@@ -7,14 +7,20 @@ class MovableObject extends DrawableObject {
     getsHurt = false;
     isImmune = false;
     animationID;
+    lastHit = 0;
+    gravityID = 0;
 
     applyGravity() {
-        setInterval(() => {
+        this.gravityID = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
         }, 1000 / 25);
+    }
+
+    cancelGravity() {
+        clearInterval(this.gravityID);
     }
 
     isColliding(obj) {
@@ -34,9 +40,17 @@ class MovableObject extends DrawableObject {
     isHit() {
         if (this.energy > 0) {
             this.energy -= 20;
+            this.lastHit = new Date().getTime();
         }
         return this.energy;
     }
+
+    isHurt() {
+        let timepassed = new Date().getTime() - this.lastHit;
+        timepassed = timepassed / 1000;
+        return timepassed < 1;
+    }
+
     isDead() {
         return this.energy <= 0;
     }

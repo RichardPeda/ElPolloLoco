@@ -1,4 +1,9 @@
 class ThrowableObject extends MovableObject {
+    objectHitEnemy = false;
+    objectCanHit = true;
+    throwID = 0;
+    thowAnimationId = 0;
+
     IMAGES_ROTATE = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
@@ -27,11 +32,9 @@ class ThrowableObject extends MovableObject {
         this.offsetWidth = 40;
         this.offsetHeight = 15;
 
-        if (obj.otherDirection) {
-            this.x = obj.x;
-        } else {
-            this.x = obj.x + obj.width / 3;
-        }
+        if (obj.otherDirection) this.x = obj.x;
+        else this.x = obj.x + obj.width / 3;
+
         this.y = obj.y + obj.height / 2;
 
         this.throw(obj.otherDirection);
@@ -39,8 +42,18 @@ class ThrowableObject extends MovableObject {
     }
 
     animate() {
-        setInterval(() => {
-            this.animateRotate();
+        setStoppableInterval(() => {
+            if (!this.objectHitEnemy) {
+                this.animateRotate();
+            } else {
+                this.cancelGravity();
+                this.cancelThrowInterval();
+                this.speedY = 0;
+                this.animateSplash();
+                setTimeout(() => {
+                    this.y = 800;
+                }, 500);
+            }
         }, 1000 / 10);
     }
 
@@ -56,12 +69,13 @@ class ThrowableObject extends MovableObject {
         this.speedY = 15;
         this.applyGravity();
 
-        setInterval(() => {
-            if (direction) {
-                this.x -= 25;
-            } else {
-                this.x += 25;
-            }
+        this.throwID = setInterval(() => {
+            if (direction) this.x -= 25;
+            else this.x += 25;
         }, 50);
+    }
+
+    cancelThrowInterval() {
+        clearInterval(this.throwID);
     }
 }

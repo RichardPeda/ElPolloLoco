@@ -3,9 +3,7 @@ let world;
 let keyboard = new Keyboard();
 
 
-
 function init() {
-   
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 }
@@ -35,3 +33,5 @@ document.addEventListener('keyup', () => {
     keyboard.SPACE = false;
     keyboard.THROW = false;
 });
+
+

@@ -49,6 +49,14 @@ class Endboss extends MovableObject {
         this.height = 300;
         this.width = 300;
         this.x = 2000;
+        console.log(this.world)
+        // this.x = 500;
+
+        this.offsetY = 50;
+        this.offsetX = 10;
+        this.offsetWidth = 30;
+        this.offsetHeight = 80;
+
         this.animationSpeed = 200;
         this.energy = 100;
         this.loadImages(this.IMAGES_ALERT);

@@ -21,19 +21,22 @@ class Chicken extends MovableObject {
         this.animate();
         this.moveLeft();
         this.energy = 1;
+        console.log(this.world)
     }
 
     animate() {
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
 
-        setInterval(() => {
+        setStoppableInterval(() => {
             if (this.isDead()) {
                 this.loadImage(this.IMAGES_DEAD[0]);
                 this.stop();
+                setTimeout(() => {
+                    this.y = 800;
+                }, 1000);
             } else {
-              
                 this.playAnimation(this.IMAGES_WALK);
             }
         }, this.animationSpeed);

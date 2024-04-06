@@ -4,7 +4,7 @@ class World {
     healthStatusbar = new StatusBarHealth();
     coinStatusbar = new StatusbarCoin();
     bottleStatusbar = new StatusbarBottle();
-    bottles = [];
+    throwableBottles = [];
     level = level1;
     backgroundObj = [];
     ctx;
@@ -14,7 +14,7 @@ class World {
     max_x = this.level.maxBackground_x;
     throwableIndex = 0;
     levelCoinAmount = 0;
-    levelBottleAmount = 0;
+    levelBottleAmount = 5;
     bottleIsThrown = false;
 
     constructor(canvas, keyboard) {
@@ -24,6 +24,7 @@ class World {
         this.generateBackground();
         this.setLevelCoinAmount();
         this.setLevelBottleAmount();
+        this.setEndbossPosition();
         this.run();
         this.draw();
         this.setWorld();
@@ -44,11 +45,17 @@ class World {
         }
     }
 
+    setEndbossPosition() {
+        this.level.enemies.forEach((enemy) => {
+            if (enemy instanceof Endboss) enemy.x = this.max_x + 100;
+        });
+    }
+
     setLevelCoinAmount() {
         this.levelCoinAmount = 100 / this.level.coins.length;
     }
     setLevelBottleAmount() {
-        this.levelBottleAmount = 100 / this.level.bottles.length;
+        this.levelBottleAmount = 100 / this.level.collectableBottles.length;
     }
 
     run() {
@@ -63,18 +70,15 @@ class World {
 
     checkCharacterCollisions() {
         //Character collision hurts character
-        this.character.getsHurt = false;
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
-                if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isImmune) {
+                if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
                     enemy.isHit();
-                    enemy.isNowImmune();
+                    // enemy.isNowImmune();
                     console.log(enemy.energy);
                     this.character.bounce();
-                } else if (!enemy.isDead()) {
+                } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
-
-                    this.character.getsHurt = true;
                 }
             }
         });
@@ -92,23 +96,29 @@ class World {
 
     checkBottleCollisions() {
         //collect bottles
-        this.level.bottles.forEach((bottle, index) => {
+        this.level.collectableBottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
-                this.level.bottles.splice(index, 1);
+                this.level.collectableBottles.splice(index, 1);
             }
         });
     }
 
     checkThrowableCollisions() {
-        if (this.bottles.length > 0) {
+        if (this.throwableBottles.length > 0) {
             this.level.enemies.forEach((enemy) => {
                 enemy.getsHurt = enemy.isImmune;
-                if (this.bottles[this.bottles.length - 1].isColliding(enemy) && !enemy.isDead() && !enemy.isImmune) {
+                if (
+                    this.throwableBottles[this.throwableBottles.length - 1].isColliding(enemy) &&
+                    this.throwableBottles[this.throwableBottles.length - 1].objectCanHit &&
+                    !enemy.isDead() &&
+                    !enemy.isImmune
+                ) {
                     enemy.isHit();
+                    this.throwableBottles[this.throwableBottles.length - 1].objectHitEnemy = true;
+                    this.throwableBottles[this.throwableBottles.length - 1].objectCanHit = false;
+                    // console.log(this.throwableBottles[this.throwableBottles.length - 1])
                     enemy.getsHurt = enemy.isNowImmune();
-
-                    console.log(enemy.energy);
                 }
             });
         }
@@ -116,15 +126,15 @@ class World {
 
     checkThrowObject() {
         if (this.keyboard.THROW) {
-            if (!this.bottleIsThrown && this.character.collectedBottles > 0) {
+            if (!this.bottleIsThrown && this.character.collectedBottles > 0 && !this.character.isDead()) {
                 let bottle = new ThrowableObject(this.character);
-                this.bottles.push(bottle);
+                this.throwableBottles.push(bottle);
+                console.log(this.throwableBottles[this.throwableBottles.length - 1]);
                 this.bottleStatusbar.setPercentage(this.character.throwBottle() * this.levelBottleAmount);
 
                 this.bottleIsThrown = true;
                 setTimeout(() => {
-                    //avoid that throwing is fired to much
-                    this.bottleIsThrown = false;
+                    this.bottleIsThrown = false; //avoid that throwing is fired to often
                 }, 500);
             }
         }
@@ -132,7 +142,6 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        this.level.enemies.world = this;
     }
 
     draw() {
@@ -145,7 +154,7 @@ class World {
         this.addObjectsToMap(this.level.clouds);
 
         this.addToMap(this.character);
-        this.addObjectsToMap(this.bottles);
+        this.addObjectsToMap(this.throwableBottles);
 
         this.ctx.translate(-this.camera_x, 0);
         //-----SPACE FOR FIXED OBJECTS
@@ -157,7 +166,7 @@ class World {
 
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.bottles);
+        this.addObjectsToMap(this.level.collectableBottles);
 
         this.ctx.translate(-this.camera_x, 0);
 
