@@ -8,6 +8,12 @@ function init() {
     world = new World(canvas, keyboard);
 }
 
+
+function startGame(){
+    document.getElementById('start-screen').classList.add('d-none')
+}
+
+
 document.addEventListener('keydown', (e) => {
     if (e.key == 'a' || e.key == 'ArrowLeft') {
         keyboard.LEFT = true;
