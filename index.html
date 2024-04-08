@@ -39,11 +39,17 @@
 
         <div class="game-container">
             <div id="start-screen" class="start-screen">
-                <img src="./img/9_intro_outro_screens/start/startscreen_1.png" alt="">
+                <img src="./img/9_intro_outro_screens/start/startscreen_1.png" alt="" />
                 <div class="start-control">
-                    <div onclick="startGame()"  class="start-button">Start Game</div>
+                    <div onclick="startGame()" class="start-button">Start Game</div>
                 </div>
-              
+            </div>
+
+            <div id="gameOver-screen" class="start-screen d-none">
+                <img id="gameOver-image" src="./img/9_intro_outro_screens/game_over/game over!.png" alt="" />
+                <div class="start-control">
+                    <div onclick="restart()" class="start-button">Restart Game</div>
+                </div>
             </div>
 
             <canvas id="canvas" width="720" height="480"></canvas>

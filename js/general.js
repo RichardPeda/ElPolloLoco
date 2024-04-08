@@ -5,6 +5,7 @@ let intervallIds = [];
 function setStoppableInterval(fn, time) {
     let intervall = setInterval(fn, time);
     intervallIds.push(intervall);
+    // return intervall;
 }
 
 function stopGame() {
