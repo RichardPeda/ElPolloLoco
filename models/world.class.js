@@ -142,7 +142,7 @@ class World {
                 this.bottleIsThrown = true;
                 setTimeout(() => {
                     this.bottleIsThrown = false; //avoid that throwing is fired to often
-                }, 500);
+                }, 1000);
             }
         }
     }

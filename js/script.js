@@ -1,6 +1,10 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let muteGame = false;
+
+let imageLostGame;
+let imageWonGame;
 
 let IMAGES_LOST = ['img/9_intro_outro_screens/game_over/oh no you lost!.png', 'img/9_intro_outro_screens/game_over/you lost.png'];
 
@@ -9,6 +13,8 @@ let IMAGES_GAMEOVER = ['img/9_intro_outro_screens/game_over/game over!.png', 'im
 function init() {
     canvas = document.getElementById('canvas');
     initLevel();
+    setRandomScreens();
+    muteGame = false;
     world = new World(canvas, keyboard);
 }
 
@@ -24,11 +30,21 @@ function hideGameOverScreen() {
     document.getElementById('gameOver-screen').classList.add('d-none');
 }
 
-function setScreenLost() {
+function setRandomScreens() {
     let index = Math.round(Math.random());
-    let image = document.getElementById('gameOver-image');
+    imageLostGame = IMAGES_LOST[index];
+    imageWonGame = IMAGES_GAMEOVER[index];
+}
 
-    image.src = IMAGES_LOST[index];
+function setScreenLost() {
+    let image = document.getElementById('gameOver-image');
+    image.src = imageLostGame;
+    showGameOverScreen();
+}
+
+function setScreenWin() {
+    let image = document.getElementById('gameOver-image');
+    image.src = imageWonGame;
     showGameOverScreen();
 }
 

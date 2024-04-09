@@ -22,27 +22,32 @@ class JumpingChicken extends MovableObject {
 
         this.applyGravity();
         this.energy = 1;
-        console.log(this.world);
     }
 
     animate() {
         setStoppableInterval(() => {
-            if (!this.isAboveGround() && !this.isDead()) this.jump();
+            if (this.world.character.x > 101) {
+                if (!this.isAboveGround() && !this.isDead()) this.jump();
+            }
         }, 2000);
 
         setStoppableInterval(() => {
-            if (!this.isDead()) this.moveLeft();
+            if (this.world.character.x > 101) {
+                if (!this.isDead()) this.moveLeft();
+            }
         }, 20);
 
         setStoppableInterval(() => {
-            if (this.isDead()) {
-                this.loadImage(this.IMAGES_DEAD[0]);
-                this.stop();
-                setTimeout(() => {
-                    this.y = 800;
-                }, 1000);
-            } else if (!this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_WALK);
+            if (this.world.character.x > 101) {
+                if (this.isDead()) {
+                    this.loadImage(this.IMAGES_DEAD[0]);
+                    this.stop();
+                    setTimeout(() => {
+                        this.y = 800;
+                    }, 1000);
+                } else if (!this.isAboveGround()) {
+                    this.playAnimation(this.IMAGES_WALK);
+                }
             }
         }, this.animationSpeed);
     }

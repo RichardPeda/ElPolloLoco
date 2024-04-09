@@ -73,6 +73,7 @@ class Character extends MovableObject {
     }
 
     animate() {
+       
         setStoppableInterval(() => {
             this.audio.pause();
             if (!this.isDead())
@@ -125,7 +126,7 @@ class Character extends MovableObject {
     }
 
     playAudioWalk() {
-        if (!this.isAboveGround()) this.audio.play();
+        if (!this.isAboveGround() && !muteGame) this.audio.play();
     }
 
     collectCoin(amount) {
