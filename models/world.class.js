@@ -18,6 +18,7 @@ class World {
     levelBottleAmount = 5;
     bottleIsThrown = false;
     charMeetsEndboss = false;
+   
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -30,6 +31,7 @@ class World {
         this.run();
         this.draw();
         this.setWorld();
+       
     }
 
     /**
@@ -61,7 +63,9 @@ class World {
     }
 
     run() {
-        setInterval(() => {
+       
+
+        setStoppableInterval(() => {
             this.checkCharacterCollisions();
             this.checkThrowableCollisions();
             this.checkCoinCollisions();
@@ -82,9 +86,11 @@ class World {
             if (this.character.isColliding(enemy)) {
                 if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
                     enemy.isHit();
+                    if(!muteGame)enemy.chickenScream();
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
+                    if(!muteGame)this.character.playRandomSound()
                 }
             }
         });
@@ -94,6 +100,7 @@ class World {
         //collect coins
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
+                if(!muteGame)coin.playSound();
                 this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
                 this.level.coins.splice(index, 1);
             }
@@ -105,6 +112,7 @@ class World {
         this.level.collectableBottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
+
                 this.level.collectableBottles.splice(index, 1);
             }
         });
@@ -149,7 +157,6 @@ class World {
 
     setWorld() {
         this.character.world = this;
-
         this.level.enemies.forEach((enemy) => {
             enemy.world = this;
         });

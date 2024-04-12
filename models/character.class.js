@@ -45,14 +45,18 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-57.png',
     ];
 
+    SOUNDS_HURT = ['audio/hurt1.mp3', 'audio/hurt2.mp3', 'audio/hurt3.mp3', 'audio/hurt4.mp3'];
+
     world;
     movementSpeed = 6;
     audio = new Audio('audio/walking.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
+    audioCache = {};
 
     constructor() {
         super().loadImage(this.IMAGES_IDLE[0]);
+        this.loadSounds(this.SOUNDS_HURT);
         this.height = 200;
         this.width = 100;
         this.offsetY = 70;
@@ -73,7 +77,6 @@ class Character extends MovableObject {
     }
 
     animate() {
-       
         setStoppableInterval(() => {
             this.audio.pause();
             if (!this.isDead())
@@ -85,13 +88,17 @@ class Character extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+
                 setTimeout(() => {
-                    this.loadImage(this.IMAGES_DEAD[6])
+                    this.loadImage(this.IMAGES_DEAD[6]);
+                    this.stopAllSounds();
                     stopGame();
                     setScreenLost();
-                }, 1500);
-            } else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
-            else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
+                }, 1000);
+            } else if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+                // this.playRandomSound();
+            } else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
             else if (this.canJump()) this.jump();
             else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
             else this.loadImage(this.IMAGES_IDLE[0]);
@@ -139,5 +146,24 @@ class Character extends MovableObject {
 
     throwBottle() {
         return (this.collectedBottles -= 1);
+    }
+
+    loadSounds(audioPaths) {
+        audioPaths.forEach((audioPath, index) => {
+            let audio = new Audio(audioPath);
+            audio.loop = false;
+            this.audioCache[index] = audio;
+        });
+    }
+
+    playRandomSound() {
+        let index = Math.round(Math.random() * 3);
+        this.audioCache[index].play();
+    }
+
+    stopAllSounds() {
+        for (let index = 0; index < 4; index++) {
+            this.audioCache[index].muted = true;
+        }
     }
 }

@@ -26,13 +26,13 @@ class JumpingChicken extends MovableObject {
 
     animate() {
         setStoppableInterval(() => {
-            if (this.world.character.x > 101) {
+            if (gameStart) {
                 if (!this.isAboveGround() && !this.isDead()) this.jump();
             }
         }, 2000);
 
         setStoppableInterval(() => {
-            if (this.world.character.x > 101) {
+            if (gameStart) {
                 if (!this.isDead()) this.moveLeft();
             }
         }, 20);

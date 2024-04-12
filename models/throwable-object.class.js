@@ -2,7 +2,7 @@ class ThrowableObject extends MovableObject {
     objectHitEnemy = false;
     objectCanHit = true;
     throwID = 0;
-    thowAnimationId = 0;
+    isActive = true;
 
     IMAGES_ROTATE = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
@@ -19,6 +19,8 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
     ];
+
+    sound = new Audio('audio/bottleBreak.mp3');
 
     constructor(obj) {
         super().loadImage(this.IMAGES_ROTATE[0]);
@@ -49,9 +51,15 @@ class ThrowableObject extends MovableObject {
                 this.cancelGravity();
                 this.cancelThrowInterval();
                 this.speedY = 0;
+
+                if (this.isActive && !muteGame) this.playAudio();
+                else this.stopAudio();
+
                 this.animateSplash();
+
                 setTimeout(() => {
                     this.y = 800;
+                    this.isActive = false;
                 }, 500);
             }
         }, 1000 / 10);
@@ -77,5 +85,15 @@ class ThrowableObject extends MovableObject {
 
     cancelThrowInterval() {
         clearInterval(this.throwID);
+    }
+
+    playAudio() {
+        this.sound.loop = false;
+        this.sound.volume = 0.2;
+        this.sound.play();
+    }
+
+    stopAudio() {
+        this.sound.pause();
     }
 }
