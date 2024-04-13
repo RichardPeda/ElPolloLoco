@@ -112,7 +112,6 @@ class World {
         this.level.collectableBottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
-
                 this.level.collectableBottles.splice(index, 1);
             }
         });
