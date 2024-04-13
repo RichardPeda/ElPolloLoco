@@ -10,12 +10,6 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     gravityID = 0;
 
-    chickenSound = new Audio('audio/chickenScream.mp3');
-
-    constructor() {
-        super();
-        this.chickenSound.volume = 0.2;
-    }
 
     applyGravity() {
         this.gravityID = setInterval(() => {
@@ -94,8 +88,5 @@ class MovableObject extends DrawableObject {
         this.speedY = 15;
     }
 
-    chickenScream() {
-        this.chickenSound.loop = false;
-        this.chickenSound.play();
-    }
+   
 }

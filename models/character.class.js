@@ -45,18 +45,19 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-57.png',
     ];
 
-    SOUNDS_HURT = ['audio/hurt1.mp3', 'audio/hurt2.mp3', 'audio/hurt3.mp3', 'audio/hurt4.mp3'];
+    // SOUNDS_HURT = ['audio/hurt1.mp3', 'audio/hurt2.mp3', 'audio/hurt3.mp3', 'audio/hurt4.mp3'];
 
     world;
     movementSpeed = 6;
-    audio = new Audio('audio/walking.mp3');
+    audioWalk = new Audio('audio/walking.mp3');
+    audioHurt = new Audio('audio/hurt1.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
     audioCache = {};
 
     constructor() {
         super().loadImage(this.IMAGES_IDLE[0]);
-        this.loadSounds(this.SOUNDS_HURT);
+        // this.loadSounds(this.SOUNDS_HURT);
         this.height = 200;
         this.width = 100;
         this.offsetY = 70;
@@ -78,7 +79,7 @@ class Character extends MovableObject {
 
     animate() {
         setStoppableInterval(() => {
-            this.audio.pause();
+            this.audioWalk.muted = true;
             if (!this.isDead())
                 if (this.canMoveRight()) this.moveRight();
                 else if (this.canMoveLeft()) this.moveLeft();
@@ -91,7 +92,7 @@ class Character extends MovableObject {
 
                 setTimeout(() => {
                     this.loadImage(this.IMAGES_DEAD[6]);
-                    this.stopAllSounds();
+                    // this.stopAllSounds();
                     stopGame();
                     setScreenLost();
                 }, 1000);
@@ -133,7 +134,10 @@ class Character extends MovableObject {
     }
 
     playAudioWalk() {
-        if (!this.isAboveGround() && !muteGame) this.audio.play();
+        if (!this.isAboveGround() && !muteGame) {
+            this.audioWalk.muted = false;
+            this.audioWalk.play();
+        }
     }
 
     collectCoin(amount) {

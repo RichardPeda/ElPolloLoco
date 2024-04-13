@@ -1,11 +1,10 @@
 class Coin extends DrawableObject {
     IMAGES = ['img/8_coin/coin_1.png', 'img/8_coin/coin_2.png'];
-    coinSound = new Audio('audio/coinCollect.mp3');
+    
 
     constructor() {
         super().loadImage(this.IMAGES[0]);
         this.loadImages(this.IMAGES);
-        this.coinSound.volume = 0.2;
         this.x = 200 + Math.random() * 1500;
         this.y = 300 - Math.random() * 200;
 
@@ -22,8 +21,5 @@ class Coin extends DrawableObject {
         }, 300);
     }
 
-    playSound() {
-        this.coinSound.loop = false;
-        this.coinSound.play();
-    }
+   
 }

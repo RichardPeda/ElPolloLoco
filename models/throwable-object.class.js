@@ -89,11 +89,12 @@ class ThrowableObject extends MovableObject {
 
     playAudio() {
         this.sound.loop = false;
+        this.sound.muted = false;
         this.sound.volume = 0.2;
         this.sound.play();
     }
 
     stopAudio() {
-        this.sound.pause();
+        this.sound.muted = true;
     }
 }

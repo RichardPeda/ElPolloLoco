@@ -37,7 +37,7 @@
     <body onload="init()">
         <h1>El Pollo Loco</h1>
 
-        <div class="game-container">
+        <div id="game-container" class="game-container">
             <div id="start-screen" class="start-screen">
                 <img src="./img/9_intro_outro_screens/start/startscreen_1.png" alt="" />
                 <div class="start-control">
@@ -69,11 +69,9 @@
                     <div class="mobile-control">
                         <img src="./img/10_icons/bottle.svg" alt="" />
                     </div>
-                    <div class="mobile-control">
-                        <img src="./img/10_icons/expand.svg" alt="" />
-                    </div>
                 </div>
             </div>
+            <!-- <div onclick="setExpandBtn(); setfullScreen();" id="expand" class="expand-hud"></div> -->
 
             <canvas id="canvas" width="720" height="480"></canvas>
         </div>

@@ -18,7 +18,9 @@ class World {
     levelBottleAmount = 5;
     bottleIsThrown = false;
     charMeetsEndboss = false;
-   
+
+    chickenSound = new Audio('audio/chickenScream.mp3');
+    coinSound = new Audio('audio/coinCollect.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -32,6 +34,22 @@ class World {
         this.draw();
         this.setWorld();
        
+    }
+
+
+    
+
+    playChickenSound() {
+        // this.chickenSound.loop = false;
+
+        this.chickenSound.cloneNode.volume = 0.2;
+        this.chickenSound.cloneNode(true).play();
+        // this.chickenSound.play();
+    }
+    playCoinSound() {
+        this.coinSound.loop = false;
+        this.coinSound.volume = 0.2;
+        this.coinSound.play();
     }
 
     /**
@@ -63,8 +81,7 @@ class World {
     }
 
     run() {
-       
-
+        console.log('fully loaded')
         setStoppableInterval(() => {
             this.checkCharacterCollisions();
             this.checkThrowableCollisions();
@@ -86,11 +103,11 @@ class World {
             if (this.character.isColliding(enemy)) {
                 if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
                     enemy.isHit();
-                    if(!muteGame)enemy.chickenScream();
+                    if (!muteGame) this.playChickenSound();
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
-                    if(!muteGame)this.character.playRandomSound()
+                    // if(!muteGame)this.character.playRandomSound()
                 }
             }
         });
@@ -100,7 +117,7 @@ class World {
         //collect coins
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
-                if(!muteGame)coin.playSound();
+                if (!muteGame) this.playCoinSound();
                 this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
                 this.level.coins.splice(index, 1);
             }
