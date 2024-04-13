@@ -19,6 +19,7 @@ function init() {
     setRandomScreens();
     world = new World(canvas, keyboard);
     setVolumeBtn();
+   
 }
 
 function startGame() {
@@ -79,6 +80,9 @@ document.addEventListener('keydown', (e) => {
         keyboard.THROW = true;
     }
 });
+
+
+
 
 document.addEventListener('keyup', () => {
     keyboard.LEFT = false;

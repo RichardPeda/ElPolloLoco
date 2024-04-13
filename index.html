@@ -55,12 +55,23 @@
             <div id="volume" onclick="toggleVolume()" class="volume-hud"></div>
             <div id="mobile-hud" class="mobile-hud">
                 <div class="mobile-keys left-keys">
-                    <div class="mobile-control">
-                        <img src="./img/10_icons/arrow-left.svg" alt="">
+                    <div id="mobile-left-key" class="mobile-control">
+                        <img src="./img/10_icons/arrow-left.svg" alt="" />
+                    </div>
+                    <div id="mobile-up-key" class="mobile-control">
+                        <img src="./img/10_icons/arrow-up.svg" alt="" />
+                    </div>
+                    <div id="mobile-right-key" class="mobile-control">
+                        <img src="./img/10_icons/arrow-right.svg" alt="" />
                     </div>
                 </div>
-                <div class="mobile-keys right-keys">
-
+                <div id="mobile-bottle-key" class="mobile-keys right-keys">
+                    <div class="mobile-control">
+                        <img src="./img/10_icons/bottle.svg" alt="" />
+                    </div>
+                    <div class="mobile-control">
+                        <img src="./img/10_icons/expand.svg" alt="" />
+                    </div>
                 </div>
             </div>
 
@@ -72,5 +83,7 @@
             <span>Up Arrow or Space Key: Jump</span>
             <span>D Key: Throw Bottle</span>
         </div>
+
+        <script src="./js/mobile.js"></script>
     </body>
 </html>
