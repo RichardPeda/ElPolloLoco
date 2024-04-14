@@ -10,5 +10,5 @@ function setStoppableInterval(fn, time) {
 
 function stopGame() {
     intervallIds.forEach(clearInterval);
-    muteGame = true;
+    // muteGame = true;
 }

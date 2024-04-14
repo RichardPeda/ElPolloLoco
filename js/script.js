@@ -121,7 +121,6 @@ function setExpandBtn() {
 
 function setfullScreen() {
     let fullScreenContainer = document.getElementById('game-container');
-    enterFullscreen(fullScreenContainer);
     enterFullscreen(canvas)
    
     // exitFullscreen();

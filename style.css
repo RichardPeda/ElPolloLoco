@@ -7,12 +7,11 @@
     src: url('../fonts/peralta-v19-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-*{
+* {
     box-sizing: border-box;
 }
 
 body {
-   
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -54,7 +53,7 @@ h1 {
     object-fit: fill;
 }
 
-.volume-hud{
+.volume-hud {
     width: 100%;
     height: 50px;
     padding: 8px;
@@ -66,26 +65,26 @@ h1 {
     justify-content: center;
 }
 
-.expand-hud{
+.expand-hud {
     width: 100%;
-   height: 50px;
+    height: 50px;
     position: absolute;
     left: 0;
     bottom: 0;
     z-index: 5;
     display: flex;
-    justify-content: flex-end;  
+    justify-content: flex-end;
     align-items: center;
     padding-right: 12px;
 }
 
-.expand-hud svg{
+.expand-hud svg {
     height: 32px;
     width: 32px;
     cursor: pointer;
 }
 
-.mobile-hud{
+.mobile-hud {
     width: 100%;
     padding: 8px;
     position: absolute;
@@ -96,36 +95,36 @@ h1 {
     justify-content: space-between;
     display: none;
 }
-.mobile-keys{
+.mobile-keys {
     display: flex;
     gap: 8px;
 }
 
-.mobile-control{
+.mobile-control {
     height: 56px;
     width: 56px;
     border-radius: 100vh;
     padding: 8px;
     background-image: linear-gradient(180deg, rgb(255, 161, 0), rgb(255, 222, 58), rgb(255, 161, 0));
-    box-shadow: 2px 2px 5px rgb(154,58,23);
+    box-shadow: 2px 2px 5px rgb(154, 58, 23);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 
-.mobile-control img{
+.mobile-control img {
     height: 32px;
     width: 32px;
     pointer-events: none;
 }
 
-.volume-hud svg{
+.volume-hud svg {
     height: 100%;
     cursor: pointer;
 }
 
-.start-control{
+.start-control {
     position: absolute;
     width: 100%;
     left: 0;
@@ -135,9 +134,9 @@ h1 {
 }
 
 .start-button {
-   width: auto;
-    border: 1px solid rgb(154,58,23);
-    box-shadow: 2px 2px 5px rgb(154,58,23);
+    width: auto;
+    border: 1px solid rgb(154, 58, 23);
+    box-shadow: 2px 2px 5px rgb(154, 58, 23);
     background-image: linear-gradient(180deg, rgb(255, 161, 0), rgb(255, 222, 58), rgb(255, 161, 0));
     padding: 12px;
     border-radius: 10px;
@@ -145,7 +144,7 @@ h1 {
     cursor: pointer;
     transition: all 75ms ease-in-out;
 }
-.start-button:hover{
+.start-button:hover {
     transform: scale(1.1);
 }
 
@@ -166,14 +165,51 @@ h1 {
     background-color: rgb(20, 20, 20);
 }
 
-.d-none{display: none;}
+.turn-device {
+    position: absolute;
+    inset: 0 0 0 0;
+    background-color: black;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    padding-top: 150px;
+    align-items: center;
+    display: none;
+}
+
+.turn-device span {
+    margin-top: 50px;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+.d-none {
+    display: none;
+}
 
 @media (max-width: 720px) {
     #canvas {
         width: 100%;
     }
-    .game-container{
+    .game-container {
         width: 100%;
+    }
+    
+}
+
+
+
+
+@media (max-width: 700px){
+    .turn-device{
+        display: flex;
+    }
+}
+
+@media (orientation: landscape){
+    .turn-device{
+        display: none;
     }
 }
 
@@ -185,10 +221,13 @@ h1 {
     h1 {
         display: none;
     }
+    .game-controls{
+        display: none;
+    }
     body {
         height: 100%;
     }
-    .game-container{
+    .game-container {
         height: 100vh;
         margin: 0;
     }

@@ -33,17 +33,19 @@ class World {
         this.run();
         this.draw();
         this.setWorld();
-       
     }
-
-
-    
 
     playChickenSound() {
         // this.chickenSound.loop = false;
 
-        this.chickenSound.cloneNode.volume = 0.2;
-        this.chickenSound.cloneNode(true).play();
+        // this.chickenSound.cloneNode.volume = 0.2;
+        this.chickenSound.volume = 0.2;
+
+        let cloneAudio = this.chickenSound.cloneNode();
+        cloneAudio.volume = 0.2;
+
+        cloneAudio.play();
+        // this.chickenSound.cloneNode(false).play();
         // this.chickenSound.play();
     }
     playCoinSound() {
@@ -81,7 +83,7 @@ class World {
     }
 
     run() {
-        console.log('fully loaded')
+        console.log('fully loaded');
         setStoppableInterval(() => {
             this.checkCharacterCollisions();
             this.checkThrowableCollisions();
@@ -107,7 +109,7 @@ class World {
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
-                    // if(!muteGame)this.character.playRandomSound()
+                    this.character.playAudioHurt();
                 }
             }
         });

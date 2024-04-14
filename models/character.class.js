@@ -140,6 +140,13 @@ class Character extends MovableObject {
         }
     }
 
+    playAudioHurt() {
+        if (!muteGame) {
+            this.audioHurt.muted = false;
+            this.audioHurt.play();
+        }
+    }
+
     collectCoin(amount) {
         return (this.collectedCoins += amount);
     }
