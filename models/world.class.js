@@ -21,6 +21,7 @@ class World {
 
     chickenSound = new Audio('audio/chickenScream.mp3');
     coinSound = new Audio('audio/coinCollect.mp3');
+    endbossDieSound = new Audio('audio/chickenScreamBoss.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -36,22 +37,28 @@ class World {
     }
 
     playChickenSound() {
-        // this.chickenSound.loop = false;
-
-        // this.chickenSound.cloneNode.volume = 0.2;
-        this.chickenSound.volume = 0.2;
-
-        let cloneAudio = this.chickenSound.cloneNode();
-        cloneAudio.volume = 0.2;
-
-        cloneAudio.play();
-        // this.chickenSound.cloneNode(false).play();
-        // this.chickenSound.play();
+        if (!muteGame) {
+            this.chickenSound.volume = 0.2;
+            let cloneAudio = this.chickenSound.cloneNode();
+            cloneAudio.volume = 0.2;
+            cloneAudio.play();
+        }
     }
+
+    playEndbossDieSound() {
+        if (!muteGame) {
+            this.endbossDieSound.loop = false;
+            this.endbossDieSound.volume = 0.2;
+            this.endbossDieSound.play();
+        }
+    }
+
     playCoinSound() {
-        this.coinSound.loop = false;
-        this.coinSound.volume = 0.2;
-        this.coinSound.play();
+        if (!muteGame) {
+            this.coinSound.loop = false;
+            this.coinSound.volume = 0.2;
+            this.coinSound.play();
+        }
     }
 
     /**
@@ -105,7 +112,7 @@ class World {
             if (this.character.isColliding(enemy)) {
                 if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
                     enemy.isHit();
-                    if (!muteGame) this.playChickenSound();
+                    this.playChickenSound();
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
@@ -119,7 +126,7 @@ class World {
         //collect coins
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
-                if (!muteGame) this.playCoinSound();
+                this.playCoinSound();
                 this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
                 this.level.coins.splice(index, 1);
             }
@@ -148,8 +155,10 @@ class World {
                 ) {
                     if (enemy instanceof Endboss) {
                         this.endbossStatusbar.setPercentage(enemy.isHit());
+                        this.playChickenSound();
                     } else {
                         enemy.isHit();
+                        this.playChickenSound();
                     }
                     this.throwableBottles[this.throwableBottles.length - 1].objectHitEnemy = true;
                     this.throwableBottles[this.throwableBottles.length - 1].objectCanHit = false;

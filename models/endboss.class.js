@@ -46,6 +46,9 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png',
     ];
 
+    audio = new Audio('audio/chicken_singleAlarmCall.mp3');
+    endbossDieSound = new Audio('audio/chickenScreamBoss.mp3');
+
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.height = 300;
@@ -78,6 +81,8 @@ class Endboss extends MovableObject {
 
         setStoppableInterval(() => {
             if (this.step == 0 && this.world.charMeetsEndboss) {
+                if (!muteGame) this.audio.play();
+
                 if (this.counter == 0 || this.counter == 1) this.moveLeft();
                 else this.moveRight();
             }
@@ -86,6 +91,7 @@ class Endboss extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                this.playEndbossDieSound()
                 this.stop();
                 setTimeout(() => {
                     // clearInterval(this.animationID);
@@ -122,5 +128,13 @@ class Endboss extends MovableObject {
     moveSequence() {
         if (this.step == 0) this.counter++;
         if (this.counter == 4) this.counter = 0;
+    }
+
+    playEndbossDieSound() {
+        if (!muteGame) {
+            this.endbossDieSound.loop = false;
+            this.endbossDieSound.volume = 0.6;
+            this.endbossDieSound.play();
+        }
     }
 }
