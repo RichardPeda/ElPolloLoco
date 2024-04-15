@@ -4,11 +4,20 @@ class StatusBarObject extends DrawableObject {
     height = 50;
     width = 150;
 
+    /**
+     * Set the DrawableObject percentage and load image of statusbar
+     * @param {Number} percentage
+     */
     setPercentage(percentage) {
         this.percentage = percentage;
         this.loadImage(this.IMAGES[this.resovePersentage(this.percentage)]);
     }
 
+    /**
+     * Resolves the given percentage to a number between 0 and 5 in 20% steps
+     * @param {Number} percentage
+     * @returns {Number}
+     */
     resovePersentage(percentage) {
         if (percentage > 80) {
             return 5;

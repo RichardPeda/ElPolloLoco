@@ -45,8 +45,6 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-57.png',
     ];
 
-    // SOUNDS_HURT = ['audio/hurt1.mp3', 'audio/hurt2.mp3', 'audio/hurt3.mp3', 'audio/hurt4.mp3'];
-
     world;
     movementSpeed = 6;
     audioWalk = new Audio('audio/walking.mp3');
@@ -57,26 +55,25 @@ class Character extends MovableObject {
 
     constructor() {
         super().loadImage(this.IMAGES_IDLE[0]);
-        // this.loadSounds(this.SOUNDS_HURT);
         this.height = 200;
         this.width = 100;
         this.offsetY = 70;
         this.offsetX = 10;
         this.offsetWidth = 30;
         this.offsetHeight = 80;
-        // this.energy = 200000;
         this.energy = 100;
-        // this.animationSpeed= 500
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        // this.isHurt = true;
         this.applyGravity();
         this.animate();
     }
 
+    /**
+     * general animation function with 2 intervals
+     */
     animate() {
         setStoppableInterval(() => {
             this.audioWalk.muted = true;
@@ -89,92 +86,117 @@ class Character extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-
                 setTimeout(() => {
                     this.loadImage(this.IMAGES_DEAD[6]);
-                    // this.stopAllSounds();
                     stopGame();
                     setScreenLost();
                 }, 1000);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                // this.playRandomSound();
-            } else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
+            } else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
+            else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
             else if (this.canJump()) this.jump();
             else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
             else this.loadImage(this.IMAGES_IDLE[0]);
         }, this.animationSpeed);
     }
 
+    /**
+     * Let character move left, clear direction flag and plays a sound of walking
+     */
     moveLeft() {
         super.moveLeft();
         this.otherDirection = true;
         this.playAudioWalk();
     }
+
+    /**
+     * Let character move right, set direction flag and plays a sound of walking
+     */
     moveRight() {
         super.moveRight();
         this.otherDirection = false;
         this.playAudioWalk();
     }
 
+    /**
+     * Returns true if the character can walk
+     * @returns {Boolean}
+     */
     canWalk() {
         return (this.world.keyboard.RIGHT && this.x < this.world.max_x) || (this.world.keyboard.LEFT && this.x > 100);
     }
 
+    /**
+     * Returns true if the character can move right
+     * @returns {Boolean}
+     */
     canMoveRight() {
         return this.world.keyboard.RIGHT && this.x < this.world.max_x;
     }
 
+    /**
+     * Returns true if the character can move left
+     * @returns {Boolean}
+     */
     canMoveLeft() {
         return this.world.keyboard.LEFT && this.x > 100;
     }
 
+    /**
+     * Returns true if the character can jump
+     * @returns {Boolean}
+     */
     canJump() {
         return (this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround();
     }
 
+    /**
+     * Play sound when character is walking
+     */
     playAudioWalk() {
         if (!this.isAboveGround() && !muteGame) {
+            this.audioWalk.loop = false;
             this.audioWalk.muted = false;
             this.audioWalk.play();
         }
     }
 
+    stopAudioWalk(){
+        this.audioWalk.muted = true;
+        this.audioWalk.pause();
+    }
+
+    /**
+     * Play sound when character is hurt
+     */
     playAudioHurt() {
         if (!muteGame) {
+            this.audioHurt.loop = false;
             this.audioHurt.muted = false;
             this.audioHurt.play();
         }
     }
-
+    /**
+     * Increase the amount of collected coins
+     * @param {Number} amount - The amount of a coin of the actual level
+     * @returns
+     */
     collectCoin(amount) {
         return (this.collectedCoins += amount);
     }
 
+    /**
+     * Increase the amount of collected bottles
+     * @returns {Number} - Amount of actual bottles
+     */
     collectBottle() {
         return (this.collectedBottles += 1);
     }
 
+    /**
+     * Decrease the amount of collected bottles
+     * @returns {Number} - Amount of actual bottles
+     */
     throwBottle() {
         return (this.collectedBottles -= 1);
-    }
-
-    loadSounds(audioPaths) {
-        audioPaths.forEach((audioPath, index) => {
-            let audio = new Audio(audioPath);
-            audio.loop = false;
-            this.audioCache[index] = audio;
-        });
-    }
-
-    playRandomSound() {
-        let index = Math.round(Math.random() * 3);
-        this.audioCache[index].play();
-    }
-
-    stopAllSounds() {
-        for (let index = 0; index < 4; index++) {
-            this.audioCache[index].muted = true;
-        }
     }
 }

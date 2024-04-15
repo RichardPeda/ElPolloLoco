@@ -20,7 +20,7 @@ class ThrowableObject extends MovableObject {
         'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png',
     ];
 
-    sound = new Audio('audio/bottleBreak.mp3');
+    audioBreak = new Audio('audio/bottleBreak.mp3');
 
     constructor(obj) {
         super().loadImage(this.IMAGES_ROTATE[0]);
@@ -48,14 +48,13 @@ class ThrowableObject extends MovableObject {
             if (!this.objectHitEnemy) {
                 this.animateRotate();
             } else {
-                this.cancelGravity();
+                // this.cancelGravity();
                 this.cancelThrowInterval();
                 this.speedY = 0;
-
-                if (this.isActive && !muteGame) this.playAudio();
-                else this.stopAudio();
-
                 this.animateSplash();
+
+                if (this.isActive) this.playAudio();
+                else this.stopAudio();
 
                 setTimeout(() => {
                     this.y = 800;
@@ -65,36 +64,56 @@ class ThrowableObject extends MovableObject {
         }, 1000 / 10);
     }
 
+    /**
+     * Plays animation of rotating bottle
+     */
     animateRotate() {
         this.playAnimation(this.IMAGES_ROTATE);
     }
 
+    /**
+     * Plays animation of a bottle splashing
+     */
     animateSplash() {
         this.playAnimation(this.IMAGES_SPLASH);
     }
 
+    /**
+     * Throw a bottle in a given direction and starts an interval
+     * @param {Boolean} direction - the direction the bottle is throwing
+     */
     throw(direction) {
         this.speedY = 15;
         this.applyGravity();
-
         this.throwID = setInterval(() => {
             if (direction) this.x -= 25;
             else this.x += 25;
         }, 50);
     }
 
+    /**
+     * Cancel the interval of the throw animation
+     */
     cancelThrowInterval() {
         clearInterval(this.throwID);
     }
 
+    /**
+     * Play audio when the bottle hit an enemy and break
+     */
     playAudio() {
-        this.sound.loop = false;
-        this.sound.muted = false;
-        this.sound.volume = 0.2;
-        this.sound.play();
+        if (!muteGame) {
+            this.audioBreak.loop = false;
+            this.audioBreak.muted = false;
+            this.audioBreak.volume = 0.2;
+            this.audioBreak.play();
+        }
     }
 
+    /**
+     * Mute the breaking bottle audio
+     */
     stopAudio() {
-        this.sound.muted = true;
+        this.audioBreak.muted = true;
     }
 }

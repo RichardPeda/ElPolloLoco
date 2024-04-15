@@ -91,45 +91,56 @@ class Endboss extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-                this.playEndbossDieSound()
+                this.playEndbossDieSound();
+                this.world.character.stopAudioWalk();
                 this.stop();
                 setTimeout(() => {
-                    // clearInterval(this.animationID);
                     this.loadImage(this.IMAGES_DEAD[2]);
                     stopGame();
                     setScreenWin();
                 }, 1500);
-            } else if (this.getsHurt) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.step == 0) {
-                this.playAnimation(this.IMAGES_WALK);
-            } else if (this.step == 1) {
-                this.playAnimation(this.IMAGES_ALERT);
-            } else if (this.step == 2) {
-                this.playAnimation(this.IMAGES_ATTACK);
-            }
+            } else if (this.getsHurt) this.playAnimation(this.IMAGES_HURT);
+            else if (this.step == 0) this.playAnimation(this.IMAGES_WALK);
+            else if (this.step == 1) this.playAnimation(this.IMAGES_ALERT);
+            else if (this.step == 2) this.playAnimation(this.IMAGES_ATTACK);
         }, this.animationSpeed);
     }
 
+    /**
+     * Let character move left and clear direction flag
+     */
     moveLeft() {
         super.moveLeft();
         this.otherDirection = false;
     }
+
+    /**
+     * Let character move right and set direction flag
+     */
     moveRight() {
         super.moveRight();
         this.otherDirection = true;
     }
 
+    /**
+     * Starts an animation sequence (walk => alert => attack)
+     */
     animationSequence() {
         if (this.step < 2) this.step++;
         else this.step = 0;
     }
 
+    /**
+     * Starts a moving animation sequence (walks 2 times left then 2 times right)
+     */
     moveSequence() {
         if (this.step == 0) this.counter++;
         if (this.counter == 4) this.counter = 0;
     }
 
+    /**
+     * Plays an audio when the enboss dies
+     */
     playEndbossDieSound() {
         if (!muteGame) {
             this.endbossDieSound.loop = false;

@@ -19,9 +19,8 @@ class World {
     bottleIsThrown = false;
     charMeetsEndboss = false;
 
-    chickenSound = new Audio('audio/chickenScream.mp3');
-    coinSound = new Audio('audio/coinCollect.mp3');
-    endbossDieSound = new Audio('audio/chickenScreamBoss.mp3');
+    audioChickenHurt = new Audio('audio/chickenScream.mp3');
+    audioCoinCollected = new Audio('audio/coinCollect.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -36,28 +35,26 @@ class World {
         this.setWorld();
     }
 
+    /**
+     * Play chicken sound when it is hit, clone for multiple audios
+     */
     playChickenSound() {
         if (!muteGame) {
-            this.chickenSound.volume = 0.2;
-            let cloneAudio = this.chickenSound.cloneNode();
+            this.audioChickenHurt.volume = 0.2;
+            let cloneAudio = this.audioChickenHurt.cloneNode();
             cloneAudio.volume = 0.2;
             cloneAudio.play();
         }
     }
 
-    playEndbossDieSound() {
-        if (!muteGame) {
-            this.endbossDieSound.loop = false;
-            this.endbossDieSound.volume = 0.2;
-            this.endbossDieSound.play();
-        }
-    }
-
+    /**
+     * Play coin collection sound
+     */
     playCoinSound() {
         if (!muteGame) {
-            this.coinSound.loop = false;
-            this.coinSound.volume = 0.2;
-            this.coinSound.play();
+            this.audioCoinCollected.loop = false;
+            this.audioCoinCollected.volume = 0.2;
+            this.audioCoinCollected.play();
         }
     }
 
@@ -76,6 +73,9 @@ class World {
         }
     }
 
+    /**
+     * Set the endboss position to the end of the level, depends how large the level background is
+     */
     setEndbossPosition() {
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss) enemy.x = this.max_x + 100;
@@ -90,7 +90,6 @@ class World {
     }
 
     run() {
-        console.log('fully loaded');
         setStoppableInterval(() => {
             this.checkCharacterCollisions();
             this.checkThrowableCollisions();
@@ -101,13 +100,18 @@ class World {
         }, 20);
     }
 
+    /**
+     * When the character is near the endboss, set flag for endboss-animation and visualize endboss-statusbar
+     */
     checkCharacterAtEndboss() {
         if (this.character.x >= this.max_x - 400) this.charMeetsEndboss = true;
         if (this.charMeetsEndboss) this.endbossStatusbar.x = 560;
     }
 
+    /**
+     * Check if character hits any enemy, character hurts the enemy above ground, otherwise the enemy hurts character
+     */
     checkCharacterCollisions() {
-        //Character collision hurts character
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
@@ -122,8 +126,10 @@ class World {
         });
     }
 
+    /**
+     * Check if character hits a coin, then collect it
+     */
     checkCoinCollisions() {
-        //collect coins
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 this.playCoinSound();
@@ -133,8 +139,10 @@ class World {
         });
     }
 
+    /**
+     * Check if character hits a bottle on the ground, then collect it
+     */
     checkBottleCollisions() {
-        //collect bottles
         this.level.collectableBottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
@@ -143,16 +151,15 @@ class World {
         });
     }
 
+    /**
+     * Check if a thrown bottle hits an enemy. Only collected bottles can be thrown.
+     * If enemy is hit, play different sounds (chicken / endboss). Chicken dies at once, endboss increase health status bar
+     */
     checkThrowableCollisions() {
         if (this.throwableBottles.length > 0) {
             this.level.enemies.forEach((enemy) => {
                 enemy.getsHurt = enemy.isImmune;
-                if (
-                    this.throwableBottles[this.throwableBottles.length - 1].isColliding(enemy) &&
-                    this.throwableBottles[this.throwableBottles.length - 1].objectCanHit &&
-                    !enemy.isDead() &&
-                    !enemy.isImmune
-                ) {
+                if (this.bottleHitsEnemy(enemy)) {
                     if (enemy instanceof Endboss) {
                         this.endbossStatusbar.setPercentage(enemy.isHit());
                         this.playChickenSound();
@@ -166,6 +173,15 @@ class World {
                 }
             });
         }
+    }
+
+    bottleHitsEnemy(enemy) {
+        return (
+            this.throwableBottles[this.throwableBottles.length - 1].isColliding(enemy) &&
+            this.throwableBottles[this.throwableBottles.length - 1].objectCanHit &&
+            !enemy.isDead() &&
+            !enemy.isImmune
+        );
     }
 
     checkThrowObject() {
@@ -233,7 +249,7 @@ class World {
     }
 
     /**
-     * Draws an objects
+     * Draws an objects, flips the images when it moves in other direction
      * @param {Object} obj - drawable Object
      */
     addToMap(obj) {
@@ -241,7 +257,7 @@ class World {
             this.flipImage(obj);
         }
         this.ctx.drawImage(obj.img, obj.x, obj.y, obj.width, obj.height);
-        this.drawCollisionOutlines(obj);
+        // this.drawCollisionOutlines(obj);
 
         if (obj.otherDirection) {
             this.flipImageBack(obj);
@@ -273,7 +289,6 @@ class World {
             this.ctx.beginPath();
             this.ctx.lineWidth = '5';
             this.ctx.strokeStyle = 'blue';
-            // this.ctx.rect(obj.x + obj.offsetX, obj.y + obj.offsetY, obj.width - obj.offsetX, obj.height - obj.offsetY);
             this.ctx.rect(obj.x + obj.offsetX, obj.y + obj.offsetY, obj.width - obj.offsetWidth, obj.height - obj.offsetHeight);
             this.ctx.stroke();
         }

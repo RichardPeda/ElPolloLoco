@@ -12,11 +12,19 @@ class DrawableObject{
     currentImage = 0;
     otherDirection = false;
 
+    /**
+     * loads one image path
+     * @param {String} path 
+     */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
+    /**
+     * loads an array of image paths
+     * @param {Array} imagePaths 
+     */
     loadImages(imagePaths) {
         imagePaths.forEach((imagePath) => {
             let img = new Image();
@@ -24,6 +32,11 @@ class DrawableObject{
             this.imageCache[imagePath] = img;
         });
     }
+
+    /**
+     * loads image path sequence for animation
+     * @param {Array} images 
+     */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];

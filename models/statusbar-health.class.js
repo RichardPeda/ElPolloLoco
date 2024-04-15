@@ -13,8 +13,7 @@ class StatusBarHealth extends StatusBarObject {
         this.loadImages(this.IMAGES);
         this.x = 5;
         this.y = -10;
-        // this.percentage = 100
-        this.setPercentage(this.percentage)
-        this.resovePersentage(this.percentage)
+        this.setPercentage(this.percentage);
+        this.resovePersentage(this.percentage);
     }
 }

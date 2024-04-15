@@ -25,6 +25,9 @@ class Chicken extends MovableObject {
        
     }
 
+    /**
+     * general animation function with 2 intervals
+     */
     animate() {
         setStoppableInterval(() => {
            

@@ -19,7 +19,6 @@ class JumpingChicken extends MovableObject {
         this.movementSpeed = 0.5 + Math.random() * 0.6;
         this.otherDirection = false;
         this.animate();
-
         this.applyGravity();
         this.energy = 1;
     }
