@@ -160,7 +160,7 @@ class Character extends MovableObject {
         }
     }
 
-    stopAudioWalk(){
+    stopAudioWalk() {
         this.audioWalk.muted = true;
         this.audioWalk.pause();
     }
@@ -186,17 +186,18 @@ class Character extends MovableObject {
 
     /**
      * Increase the amount of collected bottles
-     * @returns {Number} - Amount of actual bottles
+     * @param {Number} amount 
+     * @returns 
      */
-    collectBottle() {
-        return (this.collectedBottles += 1);
+    collectBottle(amount) {
+        return (this.collectedBottles += amount);
     }
 
     /**
      * Decrease the amount of collected bottles
      * @returns {Number} - Amount of actual bottles
      */
-    throwBottle() {
-        return (this.collectedBottles -= 1);
+    throwBottle(amount) {
+        return (this.collectedBottles -= amount);
     }
 }

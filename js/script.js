@@ -80,6 +80,12 @@ document.addEventListener('keydown', (e) => {
     if (e.key == 'f') {
         keyboard.THROW = true;
     }
+    if (e.key == 'q') {
+        keyboard.BOTTLES = true;
+    }
+    if (e.key == 'e') {
+        keyboard.HEALTH = true;
+    }
 });
 
 document.addEventListener('keyup', () => {
@@ -88,6 +94,8 @@ document.addEventListener('keyup', () => {
     keyboard.UP = false;
     keyboard.SPACE = false;
     keyboard.THROW = false;
+    keyboard.BOTTLES = false;
+    keyboard.HEALTH = false;
 });
 
 function setVolumeBtn() {

@@ -4,4 +4,6 @@ class Keyboard {
     SPACE = false;
     UP = false;
     THROW = false;
+    BOTTLES = false;
+    HEALTH = false;
 }

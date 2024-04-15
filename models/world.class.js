@@ -18,6 +18,11 @@ class World {
     levelBottleAmount = 5;
     bottleIsThrown = false;
     charMeetsEndboss = false;
+    // canChangeBottles = false;
+    // canChangeHealth = false;
+    textChangeHealth = '';
+    textChangeBottles = '';
+    textOffset = 0;
 
     audioChickenHurt = new Audio('audio/chickenScream.mp3');
     audioCoinCollected = new Audio('audio/coinCollect.mp3');
@@ -27,8 +32,8 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.generateBackground();
-        this.setLevelCoinAmount();
-        this.setLevelBottleAmount();
+        // this.setLevelCoinAmount();
+        // this.setLevelBottleAmount();
         this.setEndbossPosition();
         this.run();
         this.draw();
@@ -82,12 +87,12 @@ class World {
         });
     }
 
-    setLevelCoinAmount() {
-        this.levelCoinAmount = 100 / this.level.coins.length;
-    }
-    setLevelBottleAmount() {
-        this.levelBottleAmount = 100 / this.level.collectableBottles.length;
-    }
+    // setLevelCoinAmount() {
+    //     this.levelCoinAmount = 100 / this.level.coins.length;
+    // }
+    // setLevelBottleAmount() {
+    //     this.levelBottleAmount = 100 / this.level.collectableBottles.length;
+    // }
 
     run() {
         setStoppableInterval(() => {
@@ -97,7 +102,50 @@ class World {
             this.checkBottleCollisions();
             this.checkThrowObject();
             this.checkCharacterAtEndboss();
+            this.checkChangeCoinsForBottles();
+            this.checkChangeCoinsForHealth();
         }, 20);
+    }
+
+    checkChangeCoinsForBottles() {
+        this.textOffset = 0;
+        if (this.canChangeCoinsForBottles()) {
+            this.textChangeBottles = 'Press Q to exchange coins for bottles';
+            this.textOffset = 20;
+            if (this.keyboard.BOTTLES) {
+                this.bottleStatusbar.setPercentage(this.character.collectBottle(20));
+                this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
+            }
+        } else this.textChangeBottles = '';
+    }
+
+    checkChangeCoinsForHealth() {
+        if (this.canChangeCoinsForHealth()) {
+            this.textChangeHealth = 'Press E to exchange coins for health';
+            if (this.keyboard.HEALTH) {
+                this.healthStatusbar.setPercentage(this.healthStatusbar.percentage + 20);
+                this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
+            }
+        } else this.textChangeHealth = '';
+    }
+
+    canChangeCoinsForBottles() {
+        return this.coinStatusbarIsFilled() && !this.bottleStatusbarIsFilled();
+    }
+
+    canChangeCoinsForHealth() {
+        return this.coinStatusbarIsFilled() && !this.healthStatusbarIsFilled();
+    }
+
+    coinStatusbarIsFilled() {
+        return this.coinStatusbar.percentage == 100;
+    }
+
+    bottleStatusbarIsFilled() {
+        return this.bottleStatusbar.percentage == 100;
+    }
+    healthStatusbarIsFilled() {
+        return this.healthStatusbar.percentage == 100;
     }
 
     /**
@@ -115,8 +163,13 @@ class World {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 if (this.character.isAboveGround() && !enemy.isDead() && !enemy.isHurt()) {
-                    enemy.isHit();
-                    this.playChickenSound();
+                    if (enemy instanceof Endboss) {
+                        this.endbossStatusbar.setPercentage(enemy.isHit());
+                        this.playChickenSound();
+                    } else {
+                        enemy.isHit();
+                        this.playChickenSound();
+                    }
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
@@ -131,9 +184,9 @@ class World {
      */
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin)) {
+            if (this.character.isColliding(coin) && !this.coinStatusbarIsFilled()) {
                 this.playCoinSound();
-                this.coinStatusbar.setPercentage(this.character.collectCoin(this.levelCoinAmount));
+                this.coinStatusbar.setPercentage(this.character.collectCoin(20));
                 this.level.coins.splice(index, 1);
             }
         });
@@ -144,8 +197,8 @@ class World {
      */
     checkBottleCollisions() {
         this.level.collectableBottles.forEach((bottle, index) => {
-            if (this.character.isColliding(bottle)) {
-                this.bottleStatusbar.setPercentage(this.character.collectBottle() * this.levelBottleAmount);
+            if (this.character.isColliding(bottle) && !this.bottleStatusbarIsFilled()) {
+                this.bottleStatusbar.setPercentage(this.character.collectBottle(20));
                 this.level.collectableBottles.splice(index, 1);
             }
         });
@@ -189,7 +242,7 @@ class World {
             if (!this.bottleIsThrown && this.character.collectedBottles > 0 && !this.character.isDead()) {
                 let bottle = new ThrowableObject(this.character);
                 this.throwableBottles.push(bottle);
-                this.bottleStatusbar.setPercentage(this.character.throwBottle() * this.levelBottleAmount);
+                this.bottleStatusbar.setPercentage(this.character.throwBottle(20));
                 this.bottleIsThrown = true;
                 setTimeout(() => {
                     this.bottleIsThrown = false; //avoid that throwing is fired to often
@@ -223,6 +276,9 @@ class World {
         this.addToMap(this.coinStatusbar);
         this.addToMap(this.bottleStatusbar);
         this.addToMap(this.endbossStatusbar);
+        this.ctx.font = '16px serif';
+        this.ctx.fillText(this.textChangeBottles, 10, 140);
+        this.ctx.fillText(this.textChangeHealth, 10, 140 + this.textOffset);
         //----------------------------
         this.ctx.translate(this.camera_x, 0);
 
