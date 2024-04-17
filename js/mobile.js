@@ -2,6 +2,8 @@ const leftKey = document.getElementById('mobile-left-key');
 const rightKey = document.getElementById('mobile-right-key');
 const upKey = document.getElementById('mobile-up-key');
 const throwKey = document.getElementById('mobile-bottle-key');
+const bottleKey = document.getElementById('mobile-coinToBottle-key');
+const healthKey = document.getElementById('mobile-coinToHealth-key');
 
 leftKey.addEventListener('touchstart', () =>{
     keyboard.LEFT = true;
@@ -31,4 +33,18 @@ throwKey.addEventListener('touchstart', () =>{
 },{passive: true})
 throwKey.addEventListener('touchend', () =>{
     keyboard.THROW = false;
+},{passive: true})
+
+bottleKey.addEventListener('touchstart', () =>{
+    keyboard.BOTTLES = true;
+},{passive: true})
+bottleKey.addEventListener('touchend', () =>{
+    keyboard.BOTTLES = false;
+},{passive: true})
+
+healthKey.addEventListener('touchstart', () =>{
+    keyboard.HEALTH = true;
+},{passive: true})
+healthKey.addEventListener('touchend', () =>{
+    keyboard.HEALTH = false;
 },{passive: true})

@@ -63,6 +63,7 @@ class Character extends MovableObject {
     movementSpeed = 6;
     audioWalk = new Audio('audio/walking.mp3');
     audioHurt = new Audio('audio/hurt1.mp3');
+    audioSnoring = new Audio('audio/snoring.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
     audioCache = {};
@@ -100,9 +101,12 @@ class Character extends MovableObject {
                 if (this.canMoveRight()) this.moveRight();
                 else if (this.canMoveLeft()) this.moveLeft();
 
-                if (this.canWalk() || this.canJump()) this.wakeUp()
-                else this.fallAsleep();
+                if (this.canWalk() || this.canJump()) {
+                    this.wakeUp();
+                } else this.fallAsleep();
             }
+
+            if (this.y > 225) this.y = 225;
 
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
@@ -115,12 +119,17 @@ class Character extends MovableObject {
                     stopGame();
                     setScreenLost();
                 }, 1000);
-            } else if (this.isHurt()) this.playAnimation(this.IMAGES_HURT);
+            } else if (this.isHurt() && !this.canJump()) this.playAnimation(this.IMAGES_HURT);
             else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
             else if (this.canJump()) this.jump();
             else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
-            else if (this.isSleeping()) this.playAnimation(this.IMAGES_LONG_IDLE);
-            else this.playAnimation(this.IMAGES_IDLE);
+            else if (this.isSleeping()) {
+                this.playAnimation(this.IMAGES_LONG_IDLE);
+                this.playAudioSnoring();
+            } else {
+                this.playAnimation(this.IMAGES_IDLE);
+                //  this.stopAudioSnoring()
+            }
         }, this.animationSpeed);
     }
 
@@ -133,12 +142,15 @@ class Character extends MovableObject {
 
     wakeUp() {
         this.timeStampSet = false;
+        this.stopAudioSnoring();
     }
 
     isSleeping() {
-        let timepassed = new Date().getTime() - this.lastMovement;
-        timepassed = timepassed / 1000;
-        return timepassed > 5;
+        if (this.timeStampSet) {
+            let timepassed = new Date().getTime() - this.lastMovement;
+            timepassed = timepassed / 1000;
+            return timepassed > 5;
+        } else return false;
     }
 
     /**
@@ -200,6 +212,18 @@ class Character extends MovableObject {
             this.audioWalk.muted = false;
             this.audioWalk.play();
         }
+    }
+
+    playAudioSnoring() {
+        if (!muteGame) {
+            this.audioSnoring.loop = false;
+            this.audioSnoring.play();
+        }
+    }
+
+    stopAudioSnoring() {
+        this.audioSnoring.pause();
+        this.audioSnoring.currentTime = 0;
     }
 
     stopAudioWalk() {
