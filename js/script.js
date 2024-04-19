@@ -6,6 +6,7 @@ let fullScreen = false;
 let gameStart = false;
 backgroundSound = new Audio('audio/backgroundSound.mp3');
 backgroundSound.volume = 0.2;
+mobileView = false;
 
 let imageLostGame;
 let imageWonGame;
@@ -20,6 +21,10 @@ function init() {
     setRandomScreens();
     world = new World(canvas, keyboard);
     setVolumeBtn();
+    checkWindowSize();
+
+   
+
     // setExpandBtn();
 }
 
@@ -129,8 +134,8 @@ function setExpandBtn() {
 
 function setfullScreen() {
     let fullScreenContainer = document.getElementById('game-container');
-    enterFullscreen(canvas)
-   
+    enterFullscreen(canvas);
+
     // exitFullscreen();
 }
 
@@ -159,4 +164,11 @@ function toggleVolume() {
     if (muteGame) backgroundSound.muted = true;
     else backgroundSound.muted = false;
     setVolumeBtn();
+}
+
+window.addEventListener('resize', checkWindowSize());
+
+function checkWindowSize() {
+    if (window.innerWidth < 700 || window.innerHeight <= 420) mobileView = true;
+    else mobileView = false;
 }

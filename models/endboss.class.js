@@ -91,8 +91,8 @@ class Endboss extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-                this.playEndbossDieSound();
-                this.world.character.stopAudioWalk();
+                // this.playEndbossDieSound();
+                this.playAudio(this.endbossDieSound)
                 this.stop();
                 setTimeout(() => {
                     this.loadImage(this.IMAGES_DEAD[2]);

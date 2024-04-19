@@ -23,6 +23,8 @@ class World {
     textChangeHealth = '';
     textChangeBottles = '';
     textOffset = 0;
+    desktopBottleText = document.getElementById('desktop-bottle');
+    desktopHealthText = document.getElementById('desktop-health');
 
     audioChickenHurt = new Audio('audio/chickenScream.mp3');
     audioCoinCollected = new Audio('audio/coinCollect.mp3');
@@ -57,9 +59,10 @@ class World {
      */
     playCoinSound() {
         if (!muteGame) {
-            this.audioCoinCollected.loop = false;
             this.audioCoinCollected.volume = 0.2;
-            this.audioCoinCollected.play();
+            let cloneAudio = this.audioCoinCollected.cloneNode();
+            cloneAudio.volume = 0.2;
+            cloneAudio.play();
         }
     }
 
@@ -87,13 +90,6 @@ class World {
         });
     }
 
-    // setLevelCoinAmount() {
-    //     this.levelCoinAmount = 100 / this.level.coins.length;
-    // }
-    // setLevelBottleAmount() {
-    //     this.levelBottleAmount = 100 / this.level.collectableBottles.length;
-    // }
-
     run() {
         setStoppableInterval(() => {
             this.checkCharacterCollisions();
@@ -110,23 +106,22 @@ class World {
     checkChangeCoinsForBottles() {
         this.textOffset = 0;
         if (this.canChangeCoinsForBottles()) {
-            this.textChangeBottles = 'Press Q to exchange coins for bottles';
-            this.textOffset = 20;
+            this.desktopBottleText.classList.remove('d-none');
             if (this.keyboard.BOTTLES) {
                 this.bottleStatusbar.setPercentage(this.character.collectBottle(20));
                 this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
             }
-        } else this.textChangeBottles = '';
+        } else this.desktopBottleText.classList.add('d-none');
     }
 
     checkChangeCoinsForHealth() {
         if (this.canChangeCoinsForHealth()) {
-            this.textChangeHealth = 'Press E to exchange coins for health';
+            this.desktopHealthText.classList.remove('d-none');
             if (this.keyboard.HEALTH) {
                 this.healthStatusbar.setPercentage(this.healthStatusbar.percentage + 20);
                 this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
             }
-        } else this.textChangeHealth = '';
+        } else this.desktopHealthText.classList.add('d-none');
     }
 
     canChangeCoinsForBottles() {
@@ -173,7 +168,6 @@ class World {
                     this.character.bounce();
                 } else if (!enemy.isDead() && !this.character.isHurt()) {
                     this.healthStatusbar.setPercentage(this.character.isHit());
-                    this.character.playAudioHurt();
                 }
             }
         });
@@ -276,9 +270,6 @@ class World {
         this.addToMap(this.coinStatusbar);
         this.addToMap(this.bottleStatusbar);
         this.addToMap(this.endbossStatusbar);
-        this.ctx.font = '16px serif';
-        this.ctx.fillText(this.textChangeBottles, 10, 140);
-        this.ctx.fillText(this.textChangeHealth, 10, 140 + this.textOffset);
         //----------------------------
         this.ctx.translate(this.camera_x, 0);
 

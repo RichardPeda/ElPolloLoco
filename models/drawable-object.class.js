@@ -1,4 +1,4 @@
-class DrawableObject{
+class DrawableObject {
     x = 0;
     y = 100;
     offsetY = 0;
@@ -14,7 +14,7 @@ class DrawableObject{
 
     /**
      * loads one image path
-     * @param {String} path 
+     * @param {String} path
      */
     loadImage(path) {
         this.img = new Image();
@@ -23,7 +23,7 @@ class DrawableObject{
 
     /**
      * loads an array of image paths
-     * @param {Array} imagePaths 
+     * @param {Array} imagePaths
      */
     loadImages(imagePaths) {
         imagePaths.forEach((imagePath) => {
@@ -35,7 +35,7 @@ class DrawableObject{
 
     /**
      * loads image path sequence for animation
-     * @param {Array} images 
+     * @param {Array} images
      */
     playAnimation(images) {
         let i = this.currentImage % images.length;
@@ -44,4 +44,17 @@ class DrawableObject{
         this.currentImage++;
     }
 
+    playAudio(audio) {
+        if (!muteGame && gameStart) {
+            audio.volume = 0.6;
+            audio.loop = false;
+            audio.muted = false;
+            audio.play();
+        }
+    }
+
+    stopAudio(audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
 }

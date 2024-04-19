@@ -189,12 +189,23 @@ h1 {
     display: none;
 }
 
+.desktop-texts{
+    position: absolute;
+    left: 0;
+    top: 25%;
+    z-index: 5;
+    margin-left: 8px;
+}
+
 @media (max-width: 720px) {
     #canvas {
         width: 100%;
     }
     .game-container {
         width: 100%;
+    }
+    .desktop-texts{
+        display: none;
     }
   
 }
@@ -235,5 +246,8 @@ h1 {
     }
     .mobile-hud{
         display: flex;
+    }
+    .desktop-texts{
+        display: none;
     }
 }

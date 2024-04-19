@@ -64,6 +64,8 @@ class Character extends MovableObject {
     audioWalk = new Audio('audio/walking.mp3');
     audioHurt = new Audio('audio/hurt1.mp3');
     audioSnoring = new Audio('audio/snoring.mp3');
+    audioJump = new Audio('audio/jump.mp3');
+    audioLoose = new Audio('audio/charLoose.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
     audioCache = {};
@@ -96,7 +98,8 @@ class Character extends MovableObject {
      */
     animate() {
         setStoppableInterval(() => {
-            this.audioWalk.muted = true;
+            // this.audioWalk.muted = true;
+            this.stopAudio(this.audioWalk);
             if (!this.isDead()) {
                 if (this.canMoveRight()) this.moveRight();
                 else if (this.canMoveLeft()) this.moveLeft();
@@ -114,25 +117,30 @@ class Character extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
+                this.playAudio(this.audioLoose);
                 setTimeout(() => {
                     this.loadImage(this.IMAGES_DEAD[6]);
                     stopGame();
                     setScreenLost();
                 }, 1000);
-            } else if (this.isHurt() && !this.canJump()) this.playAnimation(this.IMAGES_HURT);
-            else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
-            else if (this.canJump()) this.jump();
-            else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
+            } else if (this.isHurt() && !this.canJump()) {
+                this.playAnimation(this.IMAGES_HURT);
+                this.playAudio(this.audioHurt);
+            } else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
+            else if (this.canJump()) {
+                this.jump();
+                this.playAudio(this.audioJump);
+            } else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
             else if (this.isSleeping()) {
                 this.playAnimation(this.IMAGES_LONG_IDLE);
-                this.playAudioSnoring();
-            } else {
-                this.playAnimation(this.IMAGES_IDLE);
-                //  this.stopAudioSnoring()
-            }
+                this.playAudio(this.audioSnoring);
+            } else this.playAnimation(this.IMAGES_IDLE);
         }, this.animationSpeed);
     }
 
+    /**
+     * If char is not moving set timestamp
+     */
     fallAsleep() {
         if (!this.timeStampSet) {
             this.lastMovement = new Date().getTime();
@@ -140,11 +148,18 @@ class Character extends MovableObject {
         }
     }
 
+    /**
+     * If char is moving clear timestamp and stop audio
+     */
     wakeUp() {
         this.timeStampSet = false;
-        this.stopAudioSnoring();
+        this.stopAudio(this.audioSnoring);
     }
 
+    /**
+     * If char is not moving for 5 sec. return true
+     * @returns {Boolean}
+     */
     isSleeping() {
         if (this.timeStampSet) {
             let timepassed = new Date().getTime() - this.lastMovement;
@@ -159,7 +174,7 @@ class Character extends MovableObject {
     moveLeft() {
         super.moveLeft();
         this.otherDirection = true;
-        this.playAudioWalk();
+        if (!this.isAboveGround()) this.playAudio(this.audioWalk);
     }
 
     /**
@@ -168,7 +183,7 @@ class Character extends MovableObject {
     moveRight() {
         super.moveRight();
         this.otherDirection = false;
-        this.playAudioWalk();
+        if (!this.isAboveGround()) this.playAudio(this.audioWalk);
     }
 
     /**
@@ -203,44 +218,6 @@ class Character extends MovableObject {
         return (this.world.keyboard.UP || this.world.keyboard.SPACE) && !this.isAboveGround();
     }
 
-    /**
-     * Play sound when character is walking
-     */
-    playAudioWalk() {
-        if (!this.isAboveGround() && !muteGame) {
-            this.audioWalk.loop = false;
-            this.audioWalk.muted = false;
-            this.audioWalk.play();
-        }
-    }
-
-    playAudioSnoring() {
-        if (!muteGame) {
-            this.audioSnoring.loop = false;
-            this.audioSnoring.play();
-        }
-    }
-
-    stopAudioSnoring() {
-        this.audioSnoring.pause();
-        this.audioSnoring.currentTime = 0;
-    }
-
-    stopAudioWalk() {
-        this.audioWalk.muted = true;
-        this.audioWalk.pause();
-    }
-
-    /**
-     * Play sound when character is hurt
-     */
-    playAudioHurt() {
-        if (!muteGame) {
-            this.audioHurt.loop = false;
-            this.audioHurt.muted = false;
-            this.audioHurt.play();
-        }
-    }
     /**
      * Increase the amount of collected coins
      * @param {Number} amount - The amount of a coin of the actual level
