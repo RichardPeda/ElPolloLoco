@@ -16,6 +16,10 @@ let IMAGES_LOST = ['img/9_intro_outro_screens/game_over/oh no you lost!.png', 'i
 
 let IMAGES_GAMEOVER = ['img/9_intro_outro_screens/game_over/game over!.png', 'img/9_intro_outro_screens/game_over/game over.png'];
 
+
+/**
+ * Init function when the page is loades
+ */
 function init() {
     canvas = document.getElementById('canvas');
     initLevel();
@@ -25,7 +29,6 @@ function init() {
     checkWindowSize();
     endScreen = false;
 }
-
 
 /**
  * Starts the game and hide the start screen
@@ -53,7 +56,7 @@ function showGameOverScreen() {
     document.getElementById('gameOver-screen').classList.remove('d-none');
     backgroundSound.pause();
     gameStart = false;
-    endScreen = true; 
+    endScreen = true;
 }
 
 /**
@@ -129,6 +132,9 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * Keybord controls when a key is released
+ */
 document.addEventListener('keyup', (e) => {
     if (e.key == 'a' || e.key == 'ArrowLeft') {
         keyboard.LEFT = false;
@@ -152,20 +158,6 @@ document.addEventListener('keyup', (e) => {
         keyboard.HEALTH = false;
     }
 });
-
-
-/**
- * Keybord controls when a key is released
- */
-// document.addEventListener('keyup', () => {
-//     keyboard.LEFT = false;
-//     keyboard.RIGHT = false;
-//     keyboard.UP = false;
-//     keyboard.SPACE = false;
-//     keyboard.THROW = false;
-//     keyboard.BOTTLES = false;
-//     keyboard.HEALTH = false;
-// });
 
 /**
  * Set the muting state of the game and the icon
@@ -201,10 +193,17 @@ function setExpandBtn() {
     }
 }
 
+/**
+ * set the canvas to fullscreen
+ */
 function setfullScreen() {
     enterFullscreen(canvas);
 }
 
+/**
+ * canvas to fullscreen
+ * @param {HTMLObjectElement} element 
+ */
 function enterFullscreen(element) {
     if (element.requestFullscreen) {
         element.requestFullscreen();
@@ -217,6 +216,9 @@ function enterFullscreen(element) {
     }
 }
 
+/**
+ * exit the canvas fullscreen
+ */
 function exitFullscreen() {
     if (document.exitFullscreen) {
         document.exitFullscreen();
