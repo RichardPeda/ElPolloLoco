@@ -49,6 +49,9 @@ class Endboss extends MovableObject {
     endbossAudio = createAudio('audio/chicken_singleAlarmCall.mp3');
     endbossAudioDie = createAudio('audio/chickenScreamBoss.mp3');
 
+    /**
+     * Object constructor loads images, sets coordinates and starts animation function
+     */
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.height = 300;
@@ -68,6 +71,9 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * general function with three intervals for movement, sequence and picture animation
+     */
     animate() {
         setStoppableInterval(() => {
             if (this.world.charMeetsEndboss) {

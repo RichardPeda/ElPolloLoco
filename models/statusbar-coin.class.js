@@ -8,13 +8,16 @@ class StatusbarCoin extends StatusBarObject {
         'img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png',
     ];
 
+    /**
+     * Object constructor loads images and sets coordinates
+     */
     constructor() {
         super().loadImage(this.IMAGES[5]);
         this.loadImages(this.IMAGES);
         this.x = 5;
-        this.y = 30 ;
+        this.y = 30;
         this.percentage = 0;
-        this.setPercentage(this.percentage)
-        this.resovePersentage(this.percentage)
+        this.setPercentage(this.percentage);
+        this.resovePersentage(this.percentage);
     }
 }

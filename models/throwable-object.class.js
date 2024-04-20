@@ -22,6 +22,10 @@ class ThrowableObject extends MovableObject {
 
     audioBreak = new Audio('audio/bottleBreak.mp3');
 
+    /**
+     * Object constructor load images, set coordinates and start animation when created
+     * @param {DrawableObject} obj - used for direction character property
+     */
     constructor(obj) {
         super().loadImage(this.IMAGES_ROTATE[0]);
         this.loadImages(this.IMAGES_ROTATE);
@@ -38,11 +42,13 @@ class ThrowableObject extends MovableObject {
         else this.x = obj.x + obj.width / 3;
 
         this.y = obj.y + obj.height / 2;
-
         this.throw(obj.otherDirection);
         this.animate();
     }
 
+    /**
+     * general function with one interval for movement (rotate, splash) and audio
+     */
     animate() {
         setStoppableInterval(() => {
             if (!this.objectHitEnemy) {

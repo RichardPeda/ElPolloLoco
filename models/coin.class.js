@@ -15,7 +15,7 @@ class Coin extends DrawableObject {
     }
 
     /**
-     * general animation function with 1 intervall
+     * general function with one interval for movement
      */
     animate() {
         setStoppableInterval(() => {

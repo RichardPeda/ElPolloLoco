@@ -21,11 +21,15 @@ class World {
     desktopHealthText = document.getElementById('desktop-health');
     mobileBottleBtn = document.getElementById('mobile-coinToBottle-key');
     mobileHealthBtn = document.getElementById('mobile-coinToHealth-key');
-
     audioChickenHurt = new Audio('audio/chickenScream.mp3');
     audioCoinCollected = new Audio('audio/coinCollect.mp3');
     audioBottleCollected = new Audio('audio/bottleCollect.mp3');
 
+    /**
+     * Object constructor run the main fuctions
+     * @param {HTMLObjectElement} canvas - canvas to draw
+     * @param {Keyboard} keyboard - keyboard properties
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -97,6 +101,9 @@ class World {
         });
     }
 
+    /**
+     * The function executes the main intervall of the game mechanics and checks collisions and statusbar update
+     */
     run() {
         setStoppableInterval(() => {
             this.checkCharacterCollisions();
@@ -243,6 +250,11 @@ class World {
         }
     }
 
+    /**
+     * This function returns true if a bottle hits an enemy
+     * @param {MovableObject} enemy - an enemy which can be hit by bottles
+     * @returns {Boolean}
+     */
     bottleHitsEnemy(enemy) {
         return (
             this.throwableBottles[this.throwableBottles.length - 1].isColliding(enemy) &&
@@ -252,6 +264,9 @@ class World {
         );
     }
 
+    /**
+     * This function checks if a bottle can be thrown when collected before. Creates a new object.
+     */
     checkThrowObject() {
         if (this.keyboard.THROW) {
             if (!this.bottleIsThrown && this.character.collectedBottles > 0 && !this.character.isDead()) {
@@ -266,6 +281,9 @@ class World {
         }
     }
 
+    /**
+     * This function gives other objects the world settings and properties
+     */
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach((enemy) => {
@@ -273,18 +291,16 @@ class World {
         });
     }
 
+    /**
+     * This function draws the pictures to the canvas context
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
         this.ctx.translate(this.camera_x, 0);
-
         this.addObjectsToMap(this.backgroundObj);
-
         this.addObjectsToMap(this.level.clouds);
-
         this.addToMap(this.character);
         this.addObjectsToMap(this.throwableBottles);
-
         this.ctx.translate(-this.camera_x, 0);
         //-----SPACE FOR FIXED OBJECTS
         this.addToMap(this.healthStatusbar);
@@ -293,13 +309,10 @@ class World {
         this.addToMap(this.endbossStatusbar);
         //----------------------------
         this.ctx.translate(this.camera_x, 0);
-
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.collectableBottles);
-
         this.ctx.translate(-this.camera_x, 0);
-
         let self = this;
         requestAnimationFrame(function () {
             self.draw();

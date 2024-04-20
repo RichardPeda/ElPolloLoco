@@ -2,7 +2,6 @@ class Character extends MovableObject {
     x = 100;
     y = 225;
 
-    // y = 125;
     IMAGES_WALK = [
         'img/2_character_pepe/2_walk/W-21.png',
         'img/2_character_pepe/2_walk/W-22.png',
@@ -61,26 +60,19 @@ class Character extends MovableObject {
 
     world;
     movementSpeed = 6;
-    // audioWalk = new Audio('audio/walking.mp3');
     audioWalk = createAudio('audio/walking.mp3');
-    // audioHurt = new Audio('audio/hurt1.mp3');
     audioHurt = createAudio('audio/hurt1.mp3');
-    // audioSnoring = new Audio('audio/snoring.mp3');
     audioSnoring = createAudio('audio/snoring.mp3');
-
-    // audioJump = new Audio('audio/jump.mp3');
     audioJump = createAudio('audio/jump.mp3');
-
-    // audioLoose = new Audio('audio/charLoose.mp3');
     audioLoose = createAudio('audio/charLoose.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
-    audioCache = {};
-    isMoving = false;
-
     lastMovement = 0;
     timeStampSet = false;
 
+    /**
+     * Object constructor loads images, set coordinates and starts main functions
+     */
     constructor() {
         super().loadImage(this.IMAGES_IDLE[0]);
         this.height = 200;
@@ -114,9 +106,13 @@ class Character extends MovableObject {
                 if (this.canWalk() || this.canJump()) {
                     this.wakeUp();
                 } else this.fallAsleep();
+
+                if (this.canJump()) {
+                    this.jump();
+                    this.playAudio(this.audioJump);
+                }
             }
             if (this.y > 225) this.y = 225;
-
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
 
@@ -133,10 +129,7 @@ class Character extends MovableObject {
                 this.playAnimation(this.IMAGES_HURT);
                 this.playAudio(this.audioHurt);
             } else if (this.isAboveGround()) this.playAnimation(this.IMAGES_JUMPING);
-            else if (this.canJump()) {
-                this.jump();
-                this.playAudio(this.audioJump);
-            } else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
+            else if (this.canWalk()) this.playAnimation(this.IMAGES_WALK);
             else if (this.isSleeping()) {
                 this.playAnimation(this.IMAGES_LONG_IDLE);
                 this.playAudio(this.audioSnoring);

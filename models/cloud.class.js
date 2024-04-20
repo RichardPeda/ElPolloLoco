@@ -3,6 +3,10 @@ class Cloud extends MovableObject {
     width = CANVAS_WIDTH;
     y = 20;
 
+    /**
+     * Object constructor loads images, sets coordinates and starts animation function
+     * @param {String} imagePath - image path
+     */
     constructor(imagePath) {
         super().loadImage(imagePath);
         this.x = Math.random() * 2500;
@@ -11,7 +15,7 @@ class Cloud extends MovableObject {
     }
 
     /**
-     * general animation function with 1 intervall
+     * general function with one interval for movement
      */
     animate() {
         setStoppableInterval(() => {

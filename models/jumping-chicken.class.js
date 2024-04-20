@@ -10,12 +10,16 @@ class JumpingChicken extends MovableObject {
 
     IMAGES_DEAD = ['img/3_enemies_chicken/chicken_small/2_dead/dead.png'];
 
+    /**
+     * Object constructor loads images, sets coordinates and starts animation function
+     */
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
         this.height = 50;
         this.width = 50;
         this.x = 300 + Math.random() * 2500;
         this.loadImages(this.IMAGES_WALK);
+        this.loadImages(this.IMAGES_DEAD);
         this.movementSpeed = 0.5 + Math.random() * 0.6;
         this.otherDirection = false;
         this.animate();
@@ -23,6 +27,9 @@ class JumpingChicken extends MovableObject {
         this.energy = 1;
     }
 
+    /**
+     * general function with three intervals for jumping, movement and picture animation
+     */
     animate() {
         setStoppableInterval(() => {
             if (gameStart) {
@@ -39,7 +46,7 @@ class JumpingChicken extends MovableObject {
         setStoppableInterval(() => {
             if (this.world.character.x > 101) {
                 if (this.isDead()) {
-                    this.loadImage(this.IMAGES_DEAD[0]);
+                    this.playAnimation(this.IMAGES_DEAD);
                     this.stop();
                     setTimeout(() => {
                         this.y = 800;

@@ -129,18 +129,43 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+document.addEventListener('keyup', (e) => {
+    if (e.key == 'a' || e.key == 'ArrowLeft') {
+        keyboard.LEFT = false;
+    }
+    if (e.key == 'd' || e.key == 'ArrowRight') {
+        keyboard.RIGHT = false;
+    }
+    if (e.key == 'w' || e.key == 'ArrowUp') {
+        keyboard.UP = false;
+    }
+    if (e.key == ' ') {
+        keyboard.SPACE = false;
+    }
+    if (e.key == 'f') {
+        keyboard.THROW = false;
+    }
+    if (e.key == 'q') {
+        keyboard.BOTTLES = false;
+    }
+    if (e.key == 'e') {
+        keyboard.HEALTH = false;
+    }
+});
+
+
 /**
  * Keybord controls when a key is released
  */
-document.addEventListener('keyup', () => {
-    keyboard.LEFT = false;
-    keyboard.RIGHT = false;
-    keyboard.UP = false;
-    keyboard.SPACE = false;
-    keyboard.THROW = false;
-    keyboard.BOTTLES = false;
-    keyboard.HEALTH = false;
-});
+// document.addEventListener('keyup', () => {
+//     keyboard.LEFT = false;
+//     keyboard.RIGHT = false;
+//     keyboard.UP = false;
+//     keyboard.SPACE = false;
+//     keyboard.THROW = false;
+//     keyboard.BOTTLES = false;
+//     keyboard.HEALTH = false;
+// });
 
 /**
  * Set the muting state of the game and the icon

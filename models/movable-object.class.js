@@ -10,6 +10,10 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     gravityID = 0;
 
+   
+    /**
+     * This function simulates a falling animation when Object is above the ground
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {

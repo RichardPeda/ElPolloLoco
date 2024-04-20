@@ -8,6 +8,9 @@ class StatusBarEndboss extends StatusBarObject {
         'img/7_statusbars/2_statusbar_endboss/blue/blue100.png',
     ];
 
+    /**
+     * Object constructor loads images and sets coordinates
+     */
     constructor() {
         super().loadImage(this.IMAGES[0]);
         this.loadImages(this.IMAGES);

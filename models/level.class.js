@@ -1,6 +1,5 @@
 class Level {
     enemies;
-
     clouds;
     backgroundPaths;
     maxBackgroundNr;
@@ -8,6 +7,15 @@ class Level {
     coins;
     collectableBottles;
 
+    /**
+     * Object constructor for the level objects
+     * @param {MovableObject} enemies 
+     * @param {MovableObject} clouds 
+     * @param {MovableObject} backgroundPaths 
+     * @param {Number} maxBackgroundNr 
+     * @param {DrawableObject} coins 
+     * @param {DrawableObject} collectableBottles 
+     */
     constructor(enemies, clouds, backgroundPaths, maxBackgroundNr, coins, collectableBottles) {
         this.enemies = enemies;
         this.clouds = clouds;
