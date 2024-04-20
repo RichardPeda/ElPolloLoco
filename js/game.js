@@ -7,6 +7,7 @@ let gameStart = false;
 backgroundSound = new Audio('audio/backgroundSound.mp3');
 backgroundSound.volume = 0.2;
 mobileView = false;
+endScreen = false;
 
 let imageLostGame;
 let imageWonGame;
@@ -22,53 +23,88 @@ function init() {
     world = new World(canvas, keyboard);
     setVolumeBtn();
     checkWindowSize();
-
-   
-
-    // setExpandBtn();
+    endScreen = false;
 }
 
+
+/**
+ * Starts the game and hide the start screen
+ */
 function startGame() {
     document.getElementById('start-screen').classList.add('d-none');
     gameStart = true;
     if (!muteGame) backgroundSound.play();
 }
 
+/**
+ * Enable the full screen button
+ */
+function showFullscreenBtn() {
+    let container = document.getElementById('expand');
+    if (gameStart) {
+        container.classList.remove('d-none');
+    } else container.classList.add('d-none');
+}
+
+/**
+ * Show the final screen
+ */
 function showGameOverScreen() {
     document.getElementById('gameOver-screen').classList.remove('d-none');
     backgroundSound.pause();
     gameStart = false;
+    endScreen = true; 
 }
 
+/**
+ * Hide the final screen
+ */
 function hideGameOverScreen() {
     document.getElementById('gameOver-screen').classList.add('d-none');
 }
 
+/**
+ * Set a random screen
+ */
 function setRandomScreens() {
     let index = Math.round(Math.random());
     imageLostGame = IMAGES_LOST[index];
     imageWonGame = IMAGES_GAMEOVER[index];
 }
 
+/**
+ * Set the source of the lost screen
+ */
 function setScreenLost() {
     let image = document.getElementById('gameOver-image');
     image.src = imageLostGame;
-    showGameOverScreen();
+    if (!endScreen) showGameOverScreen();
 }
 
+/**
+ * Set the source of the winning screen
+ */
 function setScreenWin() {
     let image = document.getElementById('gameOver-image');
     image.src = imageWonGame;
-    showGameOverScreen();
+    if (!endScreen) showGameOverScreen();
 }
 
+/**
+ * Restarts the game after 1 second to ensure all intervals are cleared
+ */
 function restart() {
-    init();
-    hideGameOverScreen();
-    backgroundSound.play();
-    gameStart = true;
+    setTimeout(() => {
+        init();
+        hideGameOverScreen();
+        backgroundSound.play();
+        gameStart = true;
+    }, 1000);
 }
 
+/**
+ * Keyboard controls when a key is pressed
+ */
 document.addEventListener('keydown', (e) => {
     if (e.key == 'a' || e.key == 'ArrowLeft') {
         keyboard.LEFT = true;
@@ -93,6 +129,9 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * Keybord controls when a key is released
+ */
 document.addEventListener('keyup', () => {
     keyboard.LEFT = false;
     keyboard.RIGHT = false;
@@ -103,6 +142,9 @@ document.addEventListener('keyup', () => {
     keyboard.HEALTH = false;
 });
 
+/**
+ * Set the muting state of the game and the icon
+ */
 function setVolumeBtn() {
     let container = document.getElementById('volume');
 
@@ -117,10 +159,12 @@ function setVolumeBtn() {
     }
 }
 
+/**
+ * Set the fullscreen expand button icon
+ */
 function setExpandBtn() {
     let container = document.getElementById('expand');
     fullScreen = !fullScreen;
-
     if (fullScreen) {
         container.innerHTML = /*html*/ `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v96c0 17.7 14.3 32 32 32s32-14.3 32-32V96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H32zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H64V352zM320 32c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32H320zM448 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V352z"/></svg>
@@ -133,10 +177,7 @@ function setExpandBtn() {
 }
 
 function setfullScreen() {
-    let fullScreenContainer = document.getElementById('game-container');
     enterFullscreen(canvas);
-
-    // exitFullscreen();
 }
 
 function enterFullscreen(element) {
@@ -159,6 +200,9 @@ function exitFullscreen() {
     }
 }
 
+/**
+ * Toggles the muting state on and off
+ */
 function toggleVolume() {
     muteGame = !muteGame;
     if (muteGame) backgroundSound.muted = true;
@@ -168,6 +212,9 @@ function toggleVolume() {
 
 window.addEventListener('resize', checkWindowSize());
 
+/**
+ * Check if the device is a mobile device
+ */
 function checkWindowSize() {
     if (window.innerWidth < 700 || window.innerHeight <= 420) mobileView = true;
     else mobileView = false;

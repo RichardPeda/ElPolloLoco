@@ -61,11 +61,18 @@ class Character extends MovableObject {
 
     world;
     movementSpeed = 6;
-    audioWalk = new Audio('audio/walking.mp3');
-    audioHurt = new Audio('audio/hurt1.mp3');
-    audioSnoring = new Audio('audio/snoring.mp3');
-    audioJump = new Audio('audio/jump.mp3');
-    audioLoose = new Audio('audio/charLoose.mp3');
+    // audioWalk = new Audio('audio/walking.mp3');
+    audioWalk = createAudio('audio/walking.mp3');
+    // audioHurt = new Audio('audio/hurt1.mp3');
+    audioHurt = createAudio('audio/hurt1.mp3');
+    // audioSnoring = new Audio('audio/snoring.mp3');
+    audioSnoring = createAudio('audio/snoring.mp3');
+
+    // audioJump = new Audio('audio/jump.mp3');
+    audioJump = createAudio('audio/jump.mp3');
+
+    // audioLoose = new Audio('audio/charLoose.mp3');
+    audioLoose = createAudio('audio/charLoose.mp3');
     collectedCoins = 0;
     collectedBottles = 0;
     audioCache = {};
@@ -108,7 +115,6 @@ class Character extends MovableObject {
                     this.wakeUp();
                 } else this.fallAsleep();
             }
-
             if (this.y > 225) this.y = 225;
 
             this.world.camera_x = -this.x + 100;
@@ -229,7 +235,7 @@ class Character extends MovableObject {
 
     /**
      * Increase the amount of collected bottles
-     * @param {Number} amount
+     * @param {Number} amount - Amount of actual bottles
      * @returns
      */
     collectBottle(amount) {

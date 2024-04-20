@@ -44,17 +44,31 @@ class DrawableObject {
         this.currentImage++;
     }
 
+    /**
+     * Plays audio file if game starts and is unmuted
+     * @param {Audio} audio
+     */
     playAudio(audio) {
         if (!muteGame && gameStart) {
             audio.volume = 0.6;
             audio.loop = false;
             audio.muted = false;
-            audio.play();
+            if (audio.paused) audio.play();
         }
     }
 
+    /**
+     * Stops the playing audio file
+     * @param {Audio} audio
+     */
     stopAudio(audio) {
-        audio.pause();
-        audio.currentTime = 0;
+        try {
+            if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 }

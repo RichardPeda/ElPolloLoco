@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
 
         <link rel="stylesheet" href="style.css" />
         <script src="./js/general.js"></script>
@@ -31,7 +31,7 @@
 
         <script src="./models/world.class.js"></script>
 
-        <script src="./js/script.js"></script>
+        <script src="./js/game.js"></script>
 
         <title>El Pollo Loco</title>
     </head>
@@ -47,57 +47,57 @@
             </div>
 
             <div id="gameOver-screen" class="start-screen d-none">
-                <img id="gameOver-image" src="./img/9_intro_outro_screens/game_over/game over!.png" alt="" />
+                <img id="gameOver-image" src="./img/9_intro_outro_screens/game_over/game over.png" alt="" />
                 <div class="start-control">
                     <div onclick="restart()" class="start-button">Restart Game</div>
                 </div>
             </div>
 
             <div id="volume" onclick="toggleVolume()" class="volume-hud"></div>
-            <div id="mobile-hud" class="mobile-hud">
-                <div class="mobile-keys left-keys">
-                    <div id="mobile-left-key" class="mobile-control">
-                        <img src="./img/10_icons/arrow-left.svg" alt="" />
-                    </div>
-                    <div id="mobile-up-key" class="mobile-control">
-                        <img src="./img/10_icons/arrow-up.svg" alt="" />
-                    </div>
-                    <div id="mobile-right-key" class="mobile-control">
-                        <img src="./img/10_icons/arrow-right.svg" alt="" />
-                    </div>
-                </div>
-
-                <div class="mobile-keys middle-keys">
-                    <div id="mobile-coinToBottle-key" class="mobile-control image">
-                        <img src="./img/coinToBottle.png" alt="" />
-                    </div>
-
-                    <div id="mobile-coinToHealth-key" class="mobile-control image">
-                        <img src="./img/coinToHealth.png" alt="" />
-                    </div>  
-                </div>
-
-                <div id="mobile-bottle-key" class="mobile-keys right-keys">
-                    <div class="mobile-control">
-                        <img src="./img/10_icons/bottle.svg" alt="" />
-                    </div>
-                </div>
-            </div>
+          
 
             <div class="desktop-texts">
                 <div id="desktop-bottle" class="desktop-text d-none">Press Q to exchange coins for bottles</div>
                 <div id="desktop-health" class="desktop-text d-none">Press E to exchange coins for health</div>
             </div>
-            <!-- <div onclick="setExpandBtn(); setfullScreen();" id="expand" class="expand-hud"></div> -->
 
             <canvas id="canvas" width="720" height="480"></canvas>
         </div>
+        <div id="mobile-hud" class="mobile-hud">
+            <div class="mobile-keys left-keys">
+                <div id="mobile-left-key" class="mobile-control">
+                    <img src="./img/10_icons/arrow-left.svg" alt="" />
+                </div>
+                <div id="mobile-up-key" class="mobile-control">
+                    <img src="./img/10_icons/arrow-up.svg" alt="" />
+                </div>
+                <div id="mobile-right-key" class="mobile-control">
+                    <img src="./img/10_icons/arrow-right.svg" alt="" />
+                </div>
+            </div>
 
+            <div class="mobile-keys middle-keys">
+                <div id="mobile-coinToBottle-key" class="mobile-control image d-none">
+                    <img src="./img/coinToBottle.png" alt="" />
+                </div>
+
+                <div id="mobile-coinToHealth-key" class="mobile-control image d-none">
+                    <img src="./img/coinToHealth.png" alt="" />
+                </div>
+            </div>
+
+            <div id="mobile-bottle-key" class="mobile-keys right-keys">
+                <div class="mobile-control">
+                    <img src="./img/10_icons/bottle.svg" alt="" />
+                </div>
+            </div>
+        </div>
+        <div onclick="setExpandBtn(); setfullScreen();" id="expand" class="expand-hud d-none"></div>
         <div class="game-controls">
             <span>Left/Right Arrow or A/D Key: Move</span>
             <span>Up Arrow or Space Key: Jump</span>
             <span>D Key: Throw Bottle</span>
-            <span>Coins can used to exchange for bottles (Q) or health (E)</span>
+            <span>Coins can be used to exchange for bottles (Q) or health (E)</span>
         </div>
 
         <div class="turn-device">

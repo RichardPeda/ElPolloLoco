@@ -1,5 +1,4 @@
 class World {
-    // maxBackgroundLength = 10;
     character = new Character();
     healthStatusbar = new StatusBarHealth();
     coinStatusbar = new StatusbarCoin();
@@ -18,24 +17,20 @@ class World {
     levelBottleAmount = 5;
     bottleIsThrown = false;
     charMeetsEndboss = false;
-    // canChangeBottles = false;
-    // canChangeHealth = false;
-    textChangeHealth = '';
-    textChangeBottles = '';
-    textOffset = 0;
     desktopBottleText = document.getElementById('desktop-bottle');
     desktopHealthText = document.getElementById('desktop-health');
+    mobileBottleBtn = document.getElementById('mobile-coinToBottle-key');
+    mobileHealthBtn = document.getElementById('mobile-coinToHealth-key');
 
     audioChickenHurt = new Audio('audio/chickenScream.mp3');
     audioCoinCollected = new Audio('audio/coinCollect.mp3');
+    audioBottleCollected = new Audio('audio/bottleCollect.mp3');
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.generateBackground();
-        // this.setLevelCoinAmount();
-        // this.setLevelBottleAmount();
         this.setEndbossPosition();
         this.run();
         this.draw();
@@ -55,7 +50,7 @@ class World {
     }
 
     /**
-     * Play coin collection sound
+     * Play coin collection sound, clone for multiple audios
      */
     playCoinSound() {
         if (!muteGame) {
@@ -67,7 +62,19 @@ class World {
     }
 
     /**
-     * Generates the background images for the level
+     * Play bottle collection sound, clone for multiple audios
+     */
+    playBottleSound() {
+        if (!muteGame) {
+            this.audioBottleCollected.volume = 0.2;
+            let cloneAudio = this.audioBottleCollected.cloneNode();
+            cloneAudio.volume = 0.2;
+            cloneAudio.play();
+        }
+    }
+
+    /**
+     * Generates the background for the level
      */
     generateBackground() {
         let x_offset = 0;
@@ -103,44 +110,57 @@ class World {
         }, 20);
     }
 
+    /**
+     * Coins can be changed into bottles if coin bar is filled and bottle bar not
+     * Show hint text on desktop or mobile button
+     */
     checkChangeCoinsForBottles() {
-        this.textOffset = 0;
         if (this.canChangeCoinsForBottles()) {
             this.desktopBottleText.classList.remove('d-none');
+            this.mobileBottleBtn.classList.remove('d-none');
             if (this.keyboard.BOTTLES) {
+                this.playBottleSound();
                 this.bottleStatusbar.setPercentage(this.character.collectBottle(20));
                 this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
             }
-        } else this.desktopBottleText.classList.add('d-none');
+        } else {
+            this.desktopBottleText.classList.add('d-none');
+            this.mobileBottleBtn.classList.add('d-none');
+        }
     }
 
+    /**
+     * Coins can be changed into health if coin bar is filled and health bar not
+     * Show hint text on desktop or mobile button
+     */
     checkChangeCoinsForHealth() {
         if (this.canChangeCoinsForHealth()) {
             this.desktopHealthText.classList.remove('d-none');
+            this.mobileHealthBtn.classList.remove('d-none');
             if (this.keyboard.HEALTH) {
                 this.healthStatusbar.setPercentage(this.healthStatusbar.percentage + 20);
                 this.coinStatusbar.setPercentage(this.character.collectCoin(-100));
             }
-        } else this.desktopHealthText.classList.add('d-none');
+        } else {
+            this.desktopHealthText.classList.add('d-none');
+            this.mobileHealthBtn.classList.add('d-none');
+        }
     }
 
+    /**
+     * Returns true if coin bar is filled and bottle bar not
+     * @returns {Boolean}
+     */
     canChangeCoinsForBottles() {
-        return this.coinStatusbarIsFilled() && !this.bottleStatusbarIsFilled();
+        return this.coinStatusbar.statusbarIsFull() && !this.bottleStatusbar.statusbarIsFull();
     }
 
+    /**
+     * Returns true if coin bar is filled and health bar not
+     * @returns {Boolean}
+     */
     canChangeCoinsForHealth() {
-        return this.coinStatusbarIsFilled() && !this.healthStatusbarIsFilled();
-    }
-
-    coinStatusbarIsFilled() {
-        return this.coinStatusbar.percentage == 100;
-    }
-
-    bottleStatusbarIsFilled() {
-        return this.bottleStatusbar.percentage == 100;
-    }
-    healthStatusbarIsFilled() {
-        return this.healthStatusbar.percentage == 100;
+        return this.coinStatusbar.statusbarIsFull() && !this.healthStatusbar.statusbarIsFull();
     }
 
     /**
@@ -178,7 +198,7 @@ class World {
      */
     checkCoinCollisions() {
         this.level.coins.forEach((coin, index) => {
-            if (this.character.isColliding(coin) && !this.coinStatusbarIsFilled()) {
+            if (this.character.isColliding(coin) && !this.coinStatusbar.statusbarIsFull()) {
                 this.playCoinSound();
                 this.coinStatusbar.setPercentage(this.character.collectCoin(20));
                 this.level.coins.splice(index, 1);
@@ -191,7 +211,8 @@ class World {
      */
     checkBottleCollisions() {
         this.level.collectableBottles.forEach((bottle, index) => {
-            if (this.character.isColliding(bottle) && !this.bottleStatusbarIsFilled()) {
+            if (this.character.isColliding(bottle) && !this.bottleStatusbar.statusbarIsFull()) {
+                this.playBottleSound();
                 this.bottleStatusbar.setPercentage(this.character.collectBottle(20));
                 this.level.collectableBottles.splice(index, 1);
             }

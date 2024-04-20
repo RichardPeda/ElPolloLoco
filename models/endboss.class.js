@@ -46,21 +46,18 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png',
     ];
 
-    audio = new Audio('audio/chicken_singleAlarmCall.mp3');
-    endbossDieSound = new Audio('audio/chickenScreamBoss.mp3');
+    endbossAudio = createAudio('audio/chicken_singleAlarmCall.mp3');
+    endbossAudioDie = createAudio('audio/chickenScreamBoss.mp3');
 
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
         this.height = 300;
         this.width = 300;
-        // this.x = 2000;
-        // this.x = 500;
         this.movementSpeed = 3;
         this.offsetY = 50;
         this.offsetX = 10;
         this.offsetWidth = 30;
         this.offsetHeight = 80;
-
         this.animationSpeed = 200;
         this.energy = 100;
         this.loadImages(this.IMAGES_ALERT);
@@ -81,7 +78,7 @@ class Endboss extends MovableObject {
 
         setStoppableInterval(() => {
             if (this.step == 0 && this.world.charMeetsEndboss) {
-                if (!muteGame) this.audio.play();
+                if (!muteGame) this.playAudio(this.endbossAudio);
 
                 if (this.counter == 0 || this.counter == 1) this.moveLeft();
                 else this.moveRight();
@@ -91,14 +88,13 @@ class Endboss extends MovableObject {
         setStoppableInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-                // this.playEndbossDieSound();
-                this.playAudio(this.endbossDieSound)
+                this.playAudio(this.endbossAudioDie);
                 this.stop();
                 setTimeout(() => {
                     this.loadImage(this.IMAGES_DEAD[2]);
                     stopGame();
                     setScreenWin();
-                }, 1500);
+                }, 1000);
             } else if (this.getsHurt) this.playAnimation(this.IMAGES_HURT);
             else if (this.step == 0) this.playAnimation(this.IMAGES_WALK);
             else if (this.step == 1) this.playAnimation(this.IMAGES_ALERT);

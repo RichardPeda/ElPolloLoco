@@ -48,7 +48,6 @@ class ThrowableObject extends MovableObject {
             if (!this.objectHitEnemy) {
                 this.animateRotate();
             } else {
-                // this.cancelGravity();
                 this.cancelThrowInterval();
                 this.speedY = 0;
                 this.animateSplash();

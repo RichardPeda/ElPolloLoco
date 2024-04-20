@@ -33,4 +33,12 @@ class StatusBarObject extends DrawableObject {
             return 0;
         }
     }
+
+     /**
+     * Returns true if the statusbar is at 100%
+     * @returns {Boolean}
+     */
+     statusbarIsFull() {
+        return this.percentage == 100;
+    }
 }

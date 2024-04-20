@@ -15,11 +15,11 @@ class CollectableBottle extends DrawableObject{
         this.offsetY = 10;
         this.offsetWidth = 40;
         this.offsetHeight = 15;
-        // this.animate()
+        this.animate()
     }
 
     animate(){
-        setInterval(() => {
+        setStoppableInterval(() => {
             this.playAnimation(this.IMAGES)
         }, 300);
     }
