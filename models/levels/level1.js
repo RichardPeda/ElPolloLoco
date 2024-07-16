@@ -19,11 +19,18 @@ function initLevel() {
             new Endboss(),
         ],
 
-        [new Cloud('img/5_background/layers/4_clouds/1.png'), new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'), new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'), new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'), new Cloud('img/5_background/layers/4_clouds/2.png'),
-        new Cloud('img/5_background/layers/4_clouds/1.png'), new Cloud('img/5_background/layers/4_clouds/2.png')],
+        [
+            new Cloud('img/5_background/layers/4_clouds/1.png'),
+            new Cloud('img/5_background/layers/4_clouds/2.png'),
+            new Cloud('img/5_background/layers/4_clouds/1.png'),
+            new Cloud('img/5_background/layers/4_clouds/2.png'),
+            new Cloud('img/5_background/layers/4_clouds/1.png'),
+            new Cloud('img/5_background/layers/4_clouds/2.png'),
+            new Cloud('img/5_background/layers/4_clouds/1.png'),
+            new Cloud('img/5_background/layers/4_clouds/2.png'),
+            new Cloud('img/5_background/layers/4_clouds/1.png'),
+            new Cloud('img/5_background/layers/4_clouds/2.png'),
+        ],
         [
             'img/5_background/layers/air.png',
             'img/5_background/layers/air.png',
